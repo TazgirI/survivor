@@ -1,0 +1,7 @@
+{
+
+  "survivor.messages.mob_spawn_points.save_failure": "Found no Mob Spawn Points to save",
+  "survivor.messages.mob_spawn_points.save_success": "Successfully saved %d mob spawn points",
+  "survivor.messages.mob_spawn_points.clear_success": "Cleared all mob spawn points",
+  "survivor.messages.mob_spawn_points.show_success": "Spawned %d armour stands"
+}
