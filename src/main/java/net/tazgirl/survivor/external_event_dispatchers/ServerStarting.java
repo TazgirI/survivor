@@ -7,7 +7,7 @@ import net.tazgirl.survivor.Globals;
 import net.tazgirl.survivor.Survivor;
 import net.tazgirl.survivor.Inits.InitSavedData;
 
-@EventBusSubscriber(modid = Survivor.MODID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = Survivor.MODID)
 public class ServerStarting
 {
     @SubscribeEvent

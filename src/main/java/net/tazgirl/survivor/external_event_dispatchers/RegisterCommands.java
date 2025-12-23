@@ -10,7 +10,7 @@ import net.tazgirl.tutilz.commands.QuickRegisterCommand;
 
 import java.util.Map;
 
-@EventBusSubscriber(modid = Survivor.MODID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = Survivor.MODID)
 public class RegisterCommands
 {
     @SubscribeEvent

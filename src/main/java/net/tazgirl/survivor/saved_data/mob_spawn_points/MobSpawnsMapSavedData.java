@@ -8,6 +8,7 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.tazgirl.survivor.Globals;
 import net.tazgirl.survivor.saved_data.SavedDataNames;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +24,7 @@ public class MobSpawnsMapSavedData extends SavedData
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag, HolderLookup.Provider provider)
+    public @NotNull CompoundTag save(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider)
     {
         ListTag listTag = new ListTag();
 

@@ -13,7 +13,7 @@ import net.tazgirl.tutilz.commands.QuickRegisterCommand;
 
 import java.util.List;
 
-@EventBusSubscriber(modid = Survivor.MODID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = Survivor.MODID)
 public class MobSpawnPointCommands
 {
     final static String branchName = "mobSpawnPoints";
