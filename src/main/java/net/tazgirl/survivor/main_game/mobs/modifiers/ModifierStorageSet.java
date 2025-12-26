@@ -9,17 +9,23 @@ import java.util.*;
 @ParametersAreNonnullByDefault
 public class ModifierStorageSet
 {
-    private List<MobModifierStorageRecord> modifiers = new ArrayList<>();
+    private List<ModifierStorageRecord> modifiers = new ArrayList<>();
 
     private boolean dirty = false;
 
     private int totalModifierWeight;
-    private List<MobModifierStorageRecord> modifiersDescendingCost;
+    private List<ModifierStorageRecord> modifiersDescendingCost;
 
 
-    public ModifierStorageSet(){}
+    public ModifierStorageSet()
+    {
 
-    public ModifierStorageSet(List<MobModifierStorageRecord> constructRecords){addSetOfMobModifiers(constructRecords);}
+    }
+
+    public ModifierStorageSet(List<ModifierStorageRecord> constructRecords)
+    {
+        addSetOfMobModifiers(constructRecords);
+    }
 
     public void UpdateAll()
     {
@@ -32,19 +38,19 @@ public class ModifierStorageSet
         dirty = false;
     }
 
-    private void addSetOfMobModifiers(Collection<MobModifierStorageRecord> constructRecords)
+    private void addSetOfMobModifiers(Collection<ModifierStorageRecord> constructRecords)
     {
         modifiers.addAll(constructRecords);
         dirty = false;
     }
 
-    public void AddMobModifier(MobModifierStorageRecord record)
+    public void AddMobModifier(ModifierStorageRecord record)
     {
         modifiers.add(record);
         dirty = true;
     }
 
-    public List<MobModifierStorageRecord> getModifiersByCostDescending()
+    public List<ModifierStorageRecord> getModifiersByCostDescending()
     {
         if(IsModifiersEmpty()){return null;}
 
@@ -53,18 +59,18 @@ public class ModifierStorageSet
         return modifiersDescendingCost;
     }
 
-    public List<MobModifierStorageRecord> getModifiers()
+    public List<ModifierStorageRecord> getModifiers()
     {
         return new ArrayList<>(modifiers);
     }
 
-    public List<MobModifierStorageRecord> getModifiersInBudget(int budget)
+    public List<ModifierStorageRecord> getModifiersInBudget(int budget)
     {
         if(budget == 0 || IsModifiersEmpty()){return null;}
 
-        List<MobModifierStorageRecord> returnList = new ArrayList<>();
+        List<ModifierStorageRecord> returnList = new ArrayList<>();
 
-        for(MobModifierStorageRecord record: modifiers)
+        for(ModifierStorageRecord record: modifiers)
         {
             if(record.cost() <= budget)
             {
@@ -75,24 +81,25 @@ public class ModifierStorageSet
         return returnList;
     }
 
-    public MobModifierStorageRecord randomModifier()
+    public ModifierStorageRecord randomModifier()
     {
         if(IsModifiersEmpty()){return null;}
 
         return modifiers.get(new Random().nextInt(modifiers.size()));
     }
 
-    public MobModifierStorageRecord randomModifierByWeight()
+    public ModifierStorageRecord randomModifierByWeight()
     {
         if(IsModifiersEmpty()){return null;}
 
 
         if(dirty){UpdateAll();}
 
+        // TODO: Figure out what the +1 is for
         int index = new Random().nextInt(totalModifierWeight) + 1;
         int total = 0;
 
-        for(MobModifierStorageRecord record: modifiers)
+        for(ModifierStorageRecord record: modifiers)
         {
             total += record.weight();
 
@@ -112,7 +119,7 @@ public class ModifierStorageSet
 
          totalModifierWeight = 0;
 
-        for(MobModifierStorageRecord record: modifiers)
+        for(ModifierStorageRecord record: modifiers)
         {
              totalModifierWeight += record.weight();
         }
@@ -124,7 +131,7 @@ public class ModifierStorageSet
 
 
         modifiersDescendingCost = modifiers;
-        modifiersDescendingCost.sort(Comparator.comparingInt(MobModifierStorageRecord::cost).reversed());
+        modifiersDescendingCost.sort(Comparator.comparingInt(ModifierStorageRecord::cost).reversed());
     }
 
     private boolean IsModifiersEmpty()

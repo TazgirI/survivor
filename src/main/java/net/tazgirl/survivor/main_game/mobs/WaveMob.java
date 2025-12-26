@@ -2,12 +2,14 @@ package net.tazgirl.survivor.main_game.mobs;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.tazgirl.survivor.Survivor;
 import net.tazgirl.survivor.events.wave_setup.WaveSetupEvent;
 import net.tazgirl.survivor.main_game.FullContextData;
 import net.tazgirl.survivor.main_game.mobs.modifiers.ModifierStorageSet;
 import net.tazgirl.tutilz.admin.Logging;
+import org.jline.utils.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +35,17 @@ public class WaveMob<T extends Entity> implements IWaveMob
 
     public WaveMob(EntityType<T> entityType, ModifierStorageSet modifiers, int cost, int weight, int firstWave)
     {
+        if(cost <= 0)
+        {
+            Logging.Debug("Attempted to set WaveMob cost to 0 or a negative, defaulting to 1", Survivor.LOGGER);
+            cost = 1;
+        }
+        if(weight <= 0)
+        {
+            Logging.Debug("Attempted to set WaveMob weight to 0 or a negative, defaulting to 1", Survivor.LOGGER);
+            weight = 1;
+        }
+
         this.entityType = entityType;
         this.modifiers = modifiers;
         this.cost = cost;
@@ -45,14 +58,14 @@ public class WaveMob<T extends Entity> implements IWaveMob
         return modifiers;
     }
 
-    @SubscribeEvent
-    public static void WaveSetupPre(WaveSetupEvent.Pre event)
+
+    public void WaveSetupPre(WaveSetupEvent.Pre event)
     {
 
     }
 
-    @SubscribeEvent
-    public static void WaveSetupPost(WaveSetupEvent.Post event)
+
+    public void WaveSetupPost(WaveSetupEvent.Post event)
     {
 
     }

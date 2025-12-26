@@ -13,7 +13,6 @@ public enum mob_spawn_points
     mob_spawn_points(String location)
     {
         this.location = location;
-
     }
 
     public String getLocation()

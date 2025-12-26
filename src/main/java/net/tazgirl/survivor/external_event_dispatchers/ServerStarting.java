@@ -6,6 +6,7 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.tazgirl.survivor.Globals;
 import net.tazgirl.survivor.Survivor;
 import net.tazgirl.survivor.Inits.InitSavedData;
+import net.tazgirl.survivor.main_game.registers.WaveMobRegister;
 
 @EventBusSubscriber(modid = Survivor.MODID)
 public class ServerStarting
@@ -14,6 +15,8 @@ public class ServerStarting
     public static void OnServerStarting(ServerStartingEvent event)
     {
         Globals.OnServerStarting(event);
+
+        WaveMobRegister.OnServerStarting(event);
 
         InitSavedData.OnServerStarting(event);
     }
