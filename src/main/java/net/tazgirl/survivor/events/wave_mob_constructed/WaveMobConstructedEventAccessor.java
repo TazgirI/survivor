@@ -1,6 +1,6 @@
 package net.tazgirl.survivor.events.wave_mob_constructed;
 
-import net.tazgirl.survivor.main_game.mobs.IWaveMob;
+import net.tazgirl.survivor.main_game.mobs.wave_mobs.IWaveMob;
 import net.tazgirl.tutilz.events.priority_events.EventAccessor;
 
 

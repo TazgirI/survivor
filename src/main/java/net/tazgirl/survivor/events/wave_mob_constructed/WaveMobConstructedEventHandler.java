@@ -1,9 +1,6 @@
 package net.tazgirl.survivor.events.wave_mob_constructed;
 
-import net.minecraft.world.entity.Entity;
-import net.tazgirl.survivor.events.wave_mob_collect_triggers.WaveMobCollectTriggersEvent;
-import net.tazgirl.survivor.main_game.mobs.IWaveMob;
-import net.tazgirl.survivor.main_game.mobs.WaveMob;
+import net.tazgirl.survivor.main_game.mobs.wave_mobs.IWaveMob;
 import net.tazgirl.tutilz.events.EventPriorityPair;
 import net.tazgirl.tutilz.events.priority_events.EventPairListProcessor;
 

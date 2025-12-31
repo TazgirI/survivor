@@ -2,11 +2,17 @@ package net.tazgirl.survivor.external_event_dispatchers;
 
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.tazgirl.survivor.Globals;
 import net.tazgirl.survivor.Survivor;
 import net.tazgirl.survivor.Inits.InitSavedData;
-import net.tazgirl.survivor.main_game.registers.WaveMobRegister;
+import net.tazgirl.survivor.saved_data.registers.mob_sets.MobSetsDataProcessing;
+import net.tazgirl.survivor.saved_data.registers.mob_sets.MobSetsFetchEvent;
+import net.tazgirl.survivor.saved_data.registers.modifier.ModifierDataProcessing;
+import net.tazgirl.survivor.saved_data.registers.modifier.ModifierFetchEvent;
+import net.tazgirl.survivor.saved_data.registers.wave_mob.WaveMobDataProcessing;
+import net.tazgirl.survivor.saved_data.registers.wave_mob.WaveMobFetchEvent;
 
 @EventBusSubscriber(modid = Survivor.MODID)
 public class ServerStarting
@@ -16,9 +22,16 @@ public class ServerStarting
     {
         Globals.OnServerStarting(event);
 
-        WaveMobRegister.OnServerStarting(event);
-
         InitSavedData.OnServerStarting(event);
+
+        ModifierDataProcessing.LoopJsons();
+        NeoForge.EVENT_BUS.post(new ModifierFetchEvent());
+
+        WaveMobDataProcessing.ProcessWaveMobData();
+        NeoForge.EVENT_BUS.post(new WaveMobFetchEvent());
+
+        MobSetsDataProcessing.LoopJsons();
+        NeoForge.EVENT_BUS.post(new MobSetsFetchEvent());
     }
 
 }

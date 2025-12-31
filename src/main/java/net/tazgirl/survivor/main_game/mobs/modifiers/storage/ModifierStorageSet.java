@@ -1,4 +1,4 @@
-package net.tazgirl.survivor.main_game.mobs.modifiers;
+package net.tazgirl.survivor.main_game.mobs.modifiers.storage;
 
 import net.tazgirl.survivor.Survivor;
 import net.tazgirl.tutilz.admin.Logging;
@@ -9,20 +9,15 @@ import java.util.*;
 @ParametersAreNonnullByDefault
 public class ModifierStorageSet
 {
-    private List<ModifierStorageRecord> modifiers = new ArrayList<>();
+    private final List<ModifierStorageRecord<?>> modifiers = new ArrayList<>();
 
     private boolean dirty = false;
 
     private int totalModifierWeight;
-    private List<ModifierStorageRecord> modifiersDescendingCost;
+    private List<ModifierStorageRecord<?>> modifiersDescendingCost;
 
 
-    public ModifierStorageSet()
-    {
-
-    }
-
-    public ModifierStorageSet(List<ModifierStorageRecord> constructRecords)
+    public ModifierStorageSet(List<ModifierStorageRecord<?>> constructRecords)
     {
         addSetOfMobModifiers(constructRecords);
     }
@@ -38,19 +33,19 @@ public class ModifierStorageSet
         dirty = false;
     }
 
-    private void addSetOfMobModifiers(Collection<ModifierStorageRecord> constructRecords)
+    public void addSetOfMobModifiers(Collection<ModifierStorageRecord<?>> constructRecords)
     {
         modifiers.addAll(constructRecords);
         dirty = false;
     }
 
-    public void AddMobModifier(ModifierStorageRecord record)
+    public void addMobModifier(ModifierStorageRecord<?> record)
     {
         modifiers.add(record);
         dirty = true;
     }
 
-    public List<ModifierStorageRecord> getModifiersByCostDescending()
+    public List<ModifierStorageRecord<?>> getModifiersByCostDescending()
     {
         if(IsModifiersEmpty()){return null;}
 
@@ -59,18 +54,18 @@ public class ModifierStorageSet
         return modifiersDescendingCost;
     }
 
-    public List<ModifierStorageRecord> getModifiers()
+    public List<ModifierStorageRecord<?>> getModifiers()
     {
         return new ArrayList<>(modifiers);
     }
 
-    public List<ModifierStorageRecord> getModifiersInBudget(int budget)
+    public List<ModifierStorageRecord<?>> getModifiersInBudget(int budget)
     {
         if(budget == 0 || IsModifiersEmpty()){return null;}
 
-        List<ModifierStorageRecord> returnList = new ArrayList<>();
+        List<ModifierStorageRecord<?>> returnList = new ArrayList<>();
 
-        for(ModifierStorageRecord record: modifiers)
+        for(ModifierStorageRecord<?> record: modifiers)
         {
             if(record.cost() <= budget)
             {
@@ -81,14 +76,14 @@ public class ModifierStorageSet
         return returnList;
     }
 
-    public ModifierStorageRecord randomModifier()
+    public ModifierStorageRecord<?> randomModifier()
     {
         if(IsModifiersEmpty()){return null;}
 
         return modifiers.get(new Random().nextInt(modifiers.size()));
     }
 
-    public ModifierStorageRecord randomModifierByWeight()
+    public ModifierStorageRecord<?> randomModifierByWeight()
     {
         if(IsModifiersEmpty()){return null;}
 
@@ -99,7 +94,7 @@ public class ModifierStorageSet
         int index = new Random().nextInt(totalModifierWeight) + 1;
         int total = 0;
 
-        for(ModifierStorageRecord record: modifiers)
+        for(ModifierStorageRecord<?> record: modifiers)
         {
             total += record.weight();
 
@@ -119,7 +114,7 @@ public class ModifierStorageSet
 
          totalModifierWeight = 0;
 
-        for(ModifierStorageRecord record: modifiers)
+        for(ModifierStorageRecord<?> record: modifiers)
         {
              totalModifierWeight += record.weight();
         }
@@ -131,7 +126,7 @@ public class ModifierStorageSet
 
 
         modifiersDescendingCost = modifiers;
-        modifiersDescendingCost.sort(Comparator.comparingInt(ModifierStorageRecord::cost).reversed());
+        modifiersDescendingCost.sort(Comparator.comparingInt(record -> ((ModifierStorageRecord<?>) record).cost()).reversed());
     }
 
     private boolean IsModifiersEmpty()
@@ -145,4 +140,9 @@ public class ModifierStorageSet
         return false;
     }
 
+    @Override
+    public String toString()
+    {
+        return modifiers.toString();
+    }
 }

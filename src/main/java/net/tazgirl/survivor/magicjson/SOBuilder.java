@@ -12,7 +12,8 @@ public class SOBuilder
 {
     static Map<Class<?>, Object> defaultValues = Map.of(
             Integer.class, 1,
-            MobEffect.class, Objects.requireNonNull(BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.parse("minecraft:strength")))
+            MobEffect.class, Objects.requireNonNull(BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.parse("minecraft:strength"))),
+            String.class, ""
     );
 
     public static <T> StatementOptional<T> create(Object value, Class<T> classCheck)

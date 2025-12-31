@@ -7,13 +7,19 @@ import net.tazgirl.magicjson.StatementOptional;
 import net.tazgirl.survivor.magicjson.SOBuilder;
 import net.tazgirl.survivor.main_game.mobs.ActiveMob;
 import net.tazgirl.survivor.main_game.mobs.ActiveMobEvent;
-import net.tazgirl.survivor.main_game.mobs.modifiers.ModifierStorageRecord;
+import net.tazgirl.survivor.main_game.mobs.modifiers.storage.ModifierStorageRecord;
 import net.tazgirl.survivor.main_game.mobs.modifiers.modifier_objects.base.ModifierActiveBase;
 import net.tazgirl.survivor.main_game.mobs.modifiers.modifier_objects.base.ModifierStorageArgs;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
 
-public class PotionEffectModifier
+public final class PotionEffectModifier
 {
+    private PotionEffectModifier()
+    {
+
+    }
+
     public static class Storage extends ModifierStorageArgs<Storage>
     {
         public StatementOptional<MobEffect> effect;
@@ -21,7 +27,7 @@ public class PotionEffectModifier
         public StatementOptional<Integer> level;
 
         @Override
-        public ModifierStorageArgs<Storage> putArgument(@NotNull String string, @NotNull Object object)
+        public @NotNull ModifierStorageArgs<Storage> putArgument(@NotNull String string, @NotNull Object object)
         {
             switch (string)
             {
@@ -34,15 +40,15 @@ public class PotionEffectModifier
         }
 
         @Override
-        public ModifierActiveBase<Storage> constructActive()
+        public @NonNull ModifierActiveBase<Storage> activeConstructor(@NotNull ActiveMob<?> activeMob, @NotNull ModifierStorageRecord<Storage> record)
         {
-            return null;
+            return new Active(activeMob, record);
         }
     }
 
     public static class Active extends ModifierActiveBase<Storage>
     {
-        public Active(ActiveMob activeMob, ModifierStorageRecord<Storage> storageRecord)
+        public Active(ActiveMob<?> activeMob, ModifierStorageRecord<Storage> storageRecord)
         {
             super(activeMob, storageRecord, storageRecord.trigger().get.apply(activeMob));
         }
@@ -53,7 +59,7 @@ public class PotionEffectModifier
 
         }
 
-        public void trigger(ActiveMobEvent<?> event)
+        public void trigger(@NotNull ActiveMobEvent<?> event)
         {
             Storage storage = storageRecord.modifierArgs();
 

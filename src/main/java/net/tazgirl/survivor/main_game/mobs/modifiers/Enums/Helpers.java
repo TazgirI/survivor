@@ -10,6 +10,7 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.enchantment.effects.AllOf;
 import net.tazgirl.magicjson.PrivateCore;
 import net.tazgirl.magicjson.StatementOptional;
+import net.tazgirl.survivor.magicjson.SOBuilder;
 
 public class Helpers
 {
@@ -22,29 +23,24 @@ public class Helpers
             value = element.getAsInt();
         }
 
-        return new StatementOptional<>(value);
+        return SOBuilder.create(value, Integer.class);
     }
 
     public static StatementOptional<String> string(JsonElement element)
     {
-        return new StatementOptional<>(element.getAsString());
+        return SOBuilder.create(element.getAsString(), String.class);
     }
 
     public static StatementOptional<MobEffect> mobEffectHolder(JsonElement element)
     {
-        StatementOptional<MobEffect> returnValue;
-        String elementString = element.getAsString();
+        Object returnValue = element.getAsString();
 
-        if(PrivateCore.hasStatement(elementString))
+        if(!isAddress((String) returnValue))
         {
-            returnValue = new StatementOptional<>(elementString);
-        }
-        else
-        {
-            returnValue = new StatementOptional<>(BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.parse(elementString)));
+            returnValue = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.parse((String) returnValue));
         }
 
-        return returnValue;
+        return SOBuilder.create(returnValue, MobEffect.class);
     }
 
     static boolean isAddress(String string)

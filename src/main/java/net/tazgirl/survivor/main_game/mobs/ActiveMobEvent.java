@@ -7,6 +7,13 @@ public abstract class ActiveMobEvent<T extends ActiveMobEvent<T>>
 {
     List<MobEventSubscription<T>> subscribers = new ArrayList<>();
 
+    ActiveMob<?> myMob;
+
+    public ActiveMobEvent(ActiveMob<?> myMob)
+    {
+        this.myMob = myMob;
+    }
+
     public void subscribe(Consumer<T> consumer, Integer priority)
     {
         int index = 0;

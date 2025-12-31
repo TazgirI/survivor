@@ -1,4 +1,4 @@
-package net.tazgirl.survivor.main_game.mobs;
+package net.tazgirl.survivor.main_game.mobs.wave_mobs;
 
 import net.minecraft.world.entity.EntityType;
 

@@ -8,15 +8,17 @@ import java.util.function.Function;
 
 public enum ModifierTriggers
 {
-    SPAWN(activeMob -> activeMob.spawnTrigger),
-    DAMAGE_PRE(activeMob -> activeMob.damageTriggerPre),
-    DAMAGE_POST(activeMob -> activeMob.damageTriggerPost);
+    SPAWN("spawn",activeMob -> activeMob.spawnTrigger),
+    DAMAGE_PRE("damage_pre",activeMob -> activeMob.damageTriggerPre),
+    DAMAGE_POST("damage_post", activeMob -> activeMob.damageTriggerPost);
 
-    public final Function<ActiveMob, ActiveMobEvent<?>> get;
+    public final String name;
+    public final Function<ActiveMob<?>, ActiveMobEvent<?>> get;
 
 
-    ModifierTriggers(Function<ActiveMob, ActiveMobEvent<?>> get)
+    ModifierTriggers(String name, Function<ActiveMob<?>, ActiveMobEvent<?>> get)
     {
+        this.name = name;
         this.get = get;
     }
 }
