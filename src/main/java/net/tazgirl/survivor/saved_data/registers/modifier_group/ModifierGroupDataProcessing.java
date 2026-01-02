@@ -8,8 +8,6 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.tazgirl.magicjson.data.Constants;
 import net.tazgirl.magicjson.helpers.InputStreamToJson;
 import net.tazgirl.survivor.Survivor;
-import net.tazgirl.survivor.main_game.mobs.wave_mobs.WaveMobStorageSet;
-import net.tazgirl.survivor.saved_data.registers.mob_sets.MobSetsRegister;
 import net.tazgirl.tutilz.admin.Logging;
 import net.tazgirl.tutilz.registers.MakeRegistryAddress;
 
@@ -47,7 +45,7 @@ public class ModifierGroupDataProcessing
                 continue;
             }
 
-            ModifierGroupRegister.put(address, list);
+            RegisterModifierGroup.put(address, list);
         }
     }
 

@@ -4,7 +4,7 @@ import net.tazgirl.survivor.main_game.mobs.wave_mobs.WaveMobStorageSet;
 
 import java.util.*;
 
-public class MobSetsRegister
+public class RegisterMobSets
 {
     static final Map<String, WaveMobStorageSet> register = new HashMap<>();
 
@@ -70,5 +70,10 @@ public class MobSetsRegister
     public static String registerString()
     {
         return register.toString();
+    }
+
+    public static void ClearWholeRegisterDanger()
+    {
+        register.clear();
     }
 }

@@ -2,7 +2,7 @@ package net.tazgirl.survivor.saved_data.registers.modifier_group;
 
 import java.util.*;
 
-public class ModifierGroupRegister
+public class RegisterModifierGroup
 {
     static final Map<String, List<String>> register = new HashMap<>();
 
@@ -66,5 +66,10 @@ public class ModifierGroupRegister
     public static String registerString()
     {
         return register.toString();
+    }
+
+    public static void ClearWholeRegisterDanger()
+    {
+        register.clear();
     }
 }

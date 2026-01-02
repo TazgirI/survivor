@@ -1,6 +1,7 @@
 package net.tazgirl.survivor.main_game.mobs.modifiers.Enums;
 
 import com.google.gson.JsonElement;
+import net.tazgirl.magicjson.optionals.OptionalFromElement;
 import net.tazgirl.survivor.main_game.mobs.modifiers.modifier_objects.PotionEffectModifier;
 import net.tazgirl.survivor.main_game.mobs.modifiers.modifier_objects.base.ModifierStorageArgs;
 import org.checkerframework.checker.units.qual.C;
@@ -10,7 +11,7 @@ import java.util.function.Function;
 
 public enum ModifierArgTypes
 {
-    POTION_EFFECT("potion_effect", PotionEffectModifier.Storage.class, Map.of("effect", Helpers::mobEffectHolder,"duration", Helpers::integer,"level", Helpers::integer));
+    POTION_EFFECT("potion_effect", PotionEffectModifier.Storage.class, Map.of("effect", OptionalFromElement::MOB_EFFECT_HOLDER,"duration", OptionalFromElement::INT,"level", OptionalFromElement::INT));
 
     public final String name;
     public final Class<? extends ModifierStorageArgs<?>> myClass;

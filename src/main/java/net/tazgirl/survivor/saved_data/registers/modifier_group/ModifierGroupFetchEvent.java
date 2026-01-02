@@ -8,6 +8,6 @@ public class ModifierGroupFetchEvent extends RegistryEvent<List<String>>
 {
     public ModifierGroupFetchEvent()
     {
-        super(ModifierGroupRegister.register);
+        super(RegisterModifierGroup.register);
     }
 }

@@ -5,13 +5,10 @@ import net.minecraft.commands.Commands;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import net.tazgirl.magicjson.PrivateCore;
 import net.tazgirl.magicjson.SendMessage;
-import net.tazgirl.magicjson.processing.Tokenisation;
-import net.tazgirl.magicjson.processing.TokensToHolder;
-import net.tazgirl.survivor.saved_data.registers.mob_sets.MobSetsRegister;
-import net.tazgirl.survivor.saved_data.registers.modifier.ModifierStorageRecordRegister;
-import net.tazgirl.survivor.saved_data.registers.wave_mob.WaveMobRegister;
+import net.tazgirl.survivor.saved_data.registers.mob_sets.RegisterMobSets;
+import net.tazgirl.survivor.saved_data.registers.modifier.RegisterModifierStorageRecord;
+import net.tazgirl.survivor.saved_data.registers.wave_mob.RegisterWaveMob;
 
 @EventBusSubscriber
 public class RegisterTestCommands
@@ -23,9 +20,9 @@ public class RegisterTestCommands
                 .then(Commands.argument("modifier", StringArgumentType.greedyString())
                         .executes(ctx -> {
                             String modifier = StringArgumentType.getString(ctx, "modifier");
-                            if(ModifierStorageRecordRegister.hasAddress(modifier))
+                            if(RegisterModifierStorageRecord.hasAddress(modifier))
                             {
-                                SendMessage.All(ModifierStorageRecordRegister.get(modifier).toString());
+                                SendMessage.All(RegisterModifierStorageRecord.get(modifier).toString());
                             }
 
                             return 1;
@@ -35,9 +32,9 @@ public class RegisterTestCommands
                 .then(Commands.argument("mobSet", StringArgumentType.greedyString())
                         .executes(ctx -> {
                             String mobSet = StringArgumentType.getString(ctx, "mobSet");
-                            if(MobSetsRegister.hasAddress(mobSet))
+                            if(RegisterMobSets.hasAddress(mobSet))
                             {
-                                SendMessage.All(MobSetsRegister.get(mobSet).toString());
+                                SendMessage.All(RegisterMobSets.get(mobSet).toString());
                             }
 
                             return 1;
@@ -47,9 +44,9 @@ public class RegisterTestCommands
                 .then(Commands.argument("waveMob", StringArgumentType.greedyString())
                         .executes(ctx -> {
                             String waveMob = StringArgumentType.getString(ctx, "waveMob");
-                            if(WaveMobRegister.hasAddress(waveMob))
+                            if(RegisterWaveMob.hasAddress(waveMob))
                             {
-                                SendMessage.All(WaveMobRegister.get(waveMob).toString());
+                                SendMessage.All(RegisterWaveMob.get(waveMob).toString());
                             }
 
                             return 1;
@@ -64,17 +61,17 @@ public class RegisterTestCommands
                             {
                                 case "modifier":
                                 {
-                                    SendMessage.All(ModifierStorageRecordRegister.registerString());
+                                    SendMessage.All(RegisterModifierStorageRecord.registerString());
                                     break;
                                 }
                                 case "wavemob":
                                 {
-                                    SendMessage.All(WaveMobRegister.registerString());
+                                    SendMessage.All(RegisterWaveMob.registerString());
                                     break;
                                 }
                                 case "mobset":
                                 {
-                                    SendMessage.All(MobSetsRegister.registerString());
+                                    SendMessage.All(RegisterMobSets.registerString());
                                     break;
                                 }
                             }

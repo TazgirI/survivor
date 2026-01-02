@@ -7,6 +7,6 @@ public class MobSetsFetchEvent extends RegistryEvent<WaveMobStorageSet>
 {
     public MobSetsFetchEvent()
     {
-        super(MobSetsRegister.register);
+        super(RegisterMobSets.register);
     }
 }

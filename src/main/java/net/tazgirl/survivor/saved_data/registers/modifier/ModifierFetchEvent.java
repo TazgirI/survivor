@@ -7,6 +7,6 @@ public class ModifierFetchEvent extends RegistryEvent<ModifierStorageRecord<?>>
 {
     public ModifierFetchEvent()
     {
-        super(ModifierStorageRecordRegister.register);
+        super(RegisterModifierStorageRecord.register);
     }
 }

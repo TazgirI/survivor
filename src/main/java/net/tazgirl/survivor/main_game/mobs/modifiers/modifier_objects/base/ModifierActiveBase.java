@@ -20,7 +20,7 @@ public abstract class ModifierActiveBase<T extends ModifierStorageArgs<T>>
         this.activeMob = activeMob;
         this.storageRecord = storageRecord;
         this.trigger = trigger;
-        trigger.subscribe(this::trigger, storageRecord.priority());
+        trigger.subscribe(this::trigger, storageRecord.priority().get());
     }
 
     public abstract void trigger(ActiveMobEvent<?> event);

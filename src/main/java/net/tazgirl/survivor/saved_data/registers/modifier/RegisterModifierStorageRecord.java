@@ -4,7 +4,7 @@ import net.tazgirl.survivor.main_game.mobs.modifiers.storage.ModifierStorageReco
 
 import java.util.*;
 
-public class ModifierStorageRecordRegister
+public class RegisterModifierStorageRecord
 {
     static final Map<String, ModifierStorageRecord<?>> register = new HashMap<>();
 
@@ -59,5 +59,10 @@ public class ModifierStorageRecordRegister
     public static String registerString()
     {
         return register.toString();
+    }
+
+    public static void ClearWholeRegisterDanger()
+    {
+        register.clear();
     }
 }

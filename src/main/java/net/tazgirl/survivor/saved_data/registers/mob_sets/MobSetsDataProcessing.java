@@ -12,7 +12,6 @@ import net.tazgirl.magicjson.helpers.InputStreamToJson;
 import net.tazgirl.survivor.main_game.mobs.wave_mobs.WaveMobStorageSet;
 import net.tazgirl.tutilz.registers.MakeRegistryAddress;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +46,7 @@ public class MobSetsDataProcessing
                 continue;
             }
 
-            MobSetsRegister.put(address, storageSet);
+            RegisterMobSets.put(address, storageSet);
         }
     }
 

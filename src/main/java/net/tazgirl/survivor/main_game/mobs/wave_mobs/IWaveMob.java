@@ -1,6 +1,7 @@
 package net.tazgirl.survivor.main_game.mobs.wave_mobs;
 
 import net.minecraft.world.entity.EntityType;
+import net.tazgirl.magicjson.optionals.numbers.IntegerStatementOptional;
 
 public interface IWaveMob
 {
@@ -10,7 +11,7 @@ public interface IWaveMob
 
     EntityType<?> getEntityType();
 
-    void setWeight(int newWeight);
+    void setWeight(IntegerStatementOptional newWeight);
 
-    void setCost(int newCost);
+    void setCost(IntegerStatementOptional newCost);
 }

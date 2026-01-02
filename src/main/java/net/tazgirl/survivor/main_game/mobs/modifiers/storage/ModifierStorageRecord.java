@@ -1,5 +1,6 @@
 package net.tazgirl.survivor.main_game.mobs.modifiers.storage;
 
+import net.tazgirl.magicjson.optionals.numbers.IntegerStatementOptional;
 import net.tazgirl.survivor.main_game.mobs.ActiveMob;
 import net.tazgirl.survivor.main_game.mobs.modifiers.Enums.ModifierTriggers;
 import net.tazgirl.survivor.main_game.mobs.modifiers.NameModifierRecord;
@@ -10,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public record ModifierStorageRecord<T extends ModifierStorageArgs<T>>(int cost, int weight, T modifierArgs, ModifierTriggers trigger, int priority, NameModifierRecord nameModifier)
+public record ModifierStorageRecord<T extends ModifierStorageArgs<T>>(IntegerStatementOptional cost, IntegerStatementOptional weight, T modifierArgs, ModifierTriggers trigger, IntegerStatementOptional priority, NameModifierRecord nameModifier)
 {
     public ModifierActiveBase<T> constructActive(ActiveMob<?> activeMob)
     {

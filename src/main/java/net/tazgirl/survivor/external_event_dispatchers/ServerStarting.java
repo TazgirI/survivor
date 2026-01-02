@@ -11,6 +11,8 @@ import net.tazgirl.survivor.saved_data.registers.mob_sets.MobSetsDataProcessing;
 import net.tazgirl.survivor.saved_data.registers.mob_sets.MobSetsFetchEvent;
 import net.tazgirl.survivor.saved_data.registers.modifier.ModifierDataProcessing;
 import net.tazgirl.survivor.saved_data.registers.modifier.ModifierFetchEvent;
+import net.tazgirl.survivor.saved_data.registers.modifier_group.ModifierGroupDataProcessing;
+import net.tazgirl.survivor.saved_data.registers.modifier_group.ModifierGroupFetchEvent;
 import net.tazgirl.survivor.saved_data.registers.wave_mob.WaveMobDataProcessing;
 import net.tazgirl.survivor.saved_data.registers.wave_mob.WaveMobFetchEvent;
 
@@ -22,16 +24,21 @@ public class ServerStarting
     {
         Globals.OnServerStarting(event);
 
-        InitSavedData.OnServerStarting(event);
+        InitSavedData.Init();
 
         ModifierDataProcessing.LoopJsons();
         NeoForge.EVENT_BUS.post(new ModifierFetchEvent());
+
+        ModifierGroupDataProcessing.LoopJsons();
+        NeoForge.EVENT_BUS.post(new ModifierGroupFetchEvent());
 
         WaveMobDataProcessing.ProcessWaveMobData();
         NeoForge.EVENT_BUS.post(new WaveMobFetchEvent());
 
         MobSetsDataProcessing.LoopJsons();
         NeoForge.EVENT_BUS.post(new MobSetsFetchEvent());
+
+
     }
 
 }

@@ -5,6 +5,8 @@ import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.tazgirl.magicjson.optionals.OptionalFromElement;
+import net.tazgirl.magicjson.optionals.numbers.IntegerStatementOptional;
 import net.tazgirl.survivor.Survivor;
 import net.tazgirl.tutilz.admin.Logging;
 import net.tazgirl.magicjson.data.Constants;
@@ -14,6 +16,7 @@ import net.tazgirl.survivor.main_game.mobs.modifiers.NameModifierRecord;
 import net.tazgirl.survivor.main_game.mobs.modifiers.storage.ModifierStorageRecord;
 import net.tazgirl.survivor.main_game.mobs.modifiers.Enums.ModifierArgTypes;
 import net.tazgirl.survivor.main_game.mobs.modifiers.modifier_objects.base.ModifierStorageArgs;
+import net.tazgirl.tutilz.registers.MakeRegistryAddress;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -40,9 +43,7 @@ public class ModifierDataProcessing
                 continue;
             }
 
-            String key = entry.getKey().toString();
-            int colon = key.indexOf(':');
-            String address = key.substring(0, colon + 1) + key.substring(colon + dataPath.length() + 1);
+            String address = MakeRegistryAddress.withPath(entry.getKey(), dataPath);
 
             ModifierStorageRecord<?> processedJson = processJsonRoot(jsonObject);
 
@@ -52,19 +53,23 @@ public class ModifierDataProcessing
                 continue;
             }
 
-            ModifierStorageRecordRegister.put(address, processedJson);
+            RegisterModifierStorageRecord.put(address, processedJson);
         }
     }
 
     public static ModifierStorageRecord<?> processJsonRoot(JsonObject jsonObject)
     {
         ModifierArgTypes modifier;
-        int cost;
-        int weight;
+
+        IntegerStatementOptional cost;
+        IntegerStatementOptional weight;
+
         JsonObject argsContainer;
         ModifierStorageArgs<?> modifierStorageArgs;
+
         ModifierTriggers trigger;
-        int priority;
+        IntegerStatementOptional priority;
+
         NameModifierRecord nameRecord = null;
         JsonObject nameModifierObject;
         String nameModifier;
@@ -73,14 +78,15 @@ public class ModifierDataProcessing
         try
         {
             modifier = Objects.requireNonNull(stringToModifierType(jsonObject.get("modifier").getAsString()));
-            cost = jsonObject.get("cost").getAsInt();
-            weight = jsonObject.get("weight").getAsInt();
+            cost = Objects.requireNonNull(OptionalFromElement.INT(jsonObject.get("cost")));
+            weight = Objects.requireNonNull(OptionalFromElement.INT(jsonObject.get("weight")));
             argsContainer = Objects.requireNonNull(jsonObject.getAsJsonObject("args"));
             trigger = Objects.requireNonNull(stringToModifierTrigger(jsonObject.get("trigger").getAsString()));
-            priority = jsonObject.get("priority").getAsInt();
+            priority = OptionalFromElement.INT(jsonObject.get("priority"));
         }
         catch (Exception e)
         {
+            Logging.Debug("A Modifier .json has failed to process an expected value", Survivor.LOGGER);
             return null;
         }
 
@@ -104,6 +110,7 @@ public class ModifierDataProcessing
         }
         catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
         {
+            Logging.Debug("A Modifier .json has failed to construct it's args class", Survivor.LOGGER);
             return null;
         }
 
@@ -119,7 +126,7 @@ public class ModifierDataProcessing
         return constructTypedModifierStorageArgs(cost, weight, modifierStorageArgs, trigger, priority, nameRecord, modifierStorageArgs.getClass());
     }
 
-    private static <T extends ModifierStorageArgs<T>> ModifierStorageRecord<T> constructTypedModifierStorageArgs(int cost, int weight, ModifierStorageArgs<?> modifierStorageArgs, ModifierTriggers trigger, int priority, NameModifierRecord nameRecord, Class<T> buildClass)
+    private static <T extends ModifierStorageArgs<T>> ModifierStorageRecord<T> constructTypedModifierStorageArgs(IntegerStatementOptional cost, IntegerStatementOptional weight, ModifierStorageArgs<?> modifierStorageArgs, ModifierTriggers trigger, IntegerStatementOptional priority, NameModifierRecord nameRecord, Class<T> buildClass)
     {
         return new ModifierStorageRecord<>(cost, weight, (T) modifierStorageArgs, trigger, priority, nameRecord);
     }
@@ -135,7 +142,7 @@ public class ModifierDataProcessing
     {
         for(ModifierArgTypes type: ModifierArgTypes.values())
         {
-            if(type.name().equals(string))
+            if(type.name().equalsIgnoreCase(string))
             {
                 return type;
             }

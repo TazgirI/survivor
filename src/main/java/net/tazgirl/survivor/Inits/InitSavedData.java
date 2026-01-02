@@ -9,7 +9,7 @@ import net.tazgirl.survivor.saved_data.mob_spawn_points.MobSpawnsMapSavedData;
 public class InitSavedData
 {
 
-    public static void OnServerStarting(ServerStartingEvent event)
+    public static void Init()
     {
         Globals.overworldData.computeIfAbsent(new SavedData.Factory<>(MobSpawnsMapSavedData::create, MobSpawnsMapSavedData::load), SavedDataNames.MOB_SPAWN_POINTS.toString());
     }

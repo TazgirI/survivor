@@ -2,6 +2,7 @@ package net.tazgirl.survivor.main_game.mobs.wave_mobs;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.tazgirl.magicjson.optionals.numbers.IntegerStatementOptional;
 import net.tazgirl.survivor.Survivor;
 import net.tazgirl.survivor.events.wave_setup.WaveSetupEvent;
 import net.tazgirl.survivor.main_game.FullContextData;
@@ -19,30 +20,19 @@ public class WaveMob<T extends Entity> implements IWaveMob
     protected ModifierStorageSet modifiers;
     protected ModifierStorageSet guaranteedModifiers;
 
-    protected int cost;
+    protected IntegerStatementOptional cost;
 
-    protected int weight;
+    protected IntegerStatementOptional weight;
 
-    protected int firstWave = 0;
+    protected IntegerStatementOptional firstWave = new IntegerStatementOptional(0,0);
 
-    protected Map<Integer, Consumer<FullContextData>> waveTriggersPre = new HashMap<>();
-    protected Map<Integer, Consumer<FullContextData>> waveTriggersPost = new HashMap<>();
+    protected Map<IntegerStatementOptional, Consumer<FullContextData>> waveTriggersPre = new HashMap<>();
+    protected Map<IntegerStatementOptional, Consumer<FullContextData>> waveTriggersPost = new HashMap<>();
 
 
 
-    public WaveMob(EntityType<T> entityType, ModifierStorageSet modifiers, int cost, int weight)
+    public WaveMob(EntityType<T> entityType, ModifierStorageSet modifiers, IntegerStatementOptional cost, IntegerStatementOptional weight)
     {
-        if(cost <= 0)
-        {
-            Logging.Debug("Attempted to set WaveMob cost to 0 or a negative, defaulting to 1", Survivor.LOGGER);
-            cost = 1;
-        }
-        if(weight <= 0)
-        {
-            Logging.Debug("Attempted to set WaveMob weight to 0 or a negative, defaulting to 1", Survivor.LOGGER);
-            weight = 1;
-        }
-
         this.entityType = entityType;
         this.modifiers = modifiers;
         this.cost = cost;
@@ -73,37 +63,35 @@ public class WaveMob<T extends Entity> implements IWaveMob
 
     public int getCost()
     {
-        return cost;
+        return cost.get();
     }
 
     public int getWeight()
     {
+        return weight.get();
+    }
+
+    public IntegerStatementOptional getCostRaw()
+    {
+        return cost;
+    }
+
+    public IntegerStatementOptional getWeightRaw()
+    {
         return weight;
     }
 
-    public void setCost(int newCost)
+    public void setCost(IntegerStatementOptional newCost)
     {
-        if(newCost <= 0)
-        {
-            Logging.Error("Attempted to set a WaveMob's cost to 0 or a negative", Survivor.LOGGER);
-            return;
-        }
-
         cost = newCost;
     }
 
-    public void setWeight(int newWeight)
+    public void setWeight(IntegerStatementOptional newWeight)
     {
-        if(newWeight < 0)
-        {
-            Logging.Error("Attempted to set a WaveMob's weight to a negative", Survivor.LOGGER);
-            return;
-        }
-
         weight = newWeight;
     }
 
-    public void setFirstWave(int firstWave)
+    public void setFirstWave(IntegerStatementOptional firstWave)
     {
         this.firstWave = firstWave;
     }

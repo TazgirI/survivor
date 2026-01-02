@@ -7,7 +7,7 @@
   "first_wave": 0,
   "modifiers":
           [
-
+            "survivor:just_strong"
           ],
   "guaranteed_modifiers":
           [

@@ -58,6 +58,8 @@ public class WaveMobCollectTriggersEvent extends Event
     // Uses enum to place the consumer in the correct List within WaveMob
     // TODO: How to handle during wave events?
 
+    // TODO: Figure out what the fuck this is
+
 
 
 

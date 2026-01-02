@@ -1,6 +1,6 @@
 {
- "addresses":
- [
-  "survivor:test"
- ]
+  "anything":
+  [
+    "survivor:example_skeleton"
+  ]
 }

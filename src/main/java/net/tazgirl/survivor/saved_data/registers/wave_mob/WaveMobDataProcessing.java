@@ -1,6 +1,5 @@
 package net.tazgirl.survivor.saved_data.registers.wave_mob;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -10,12 +9,12 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.EntityType;
 import net.tazgirl.survivor.Survivor;
-import net.tazgirl.survivor.saved_data.registers.modifier_group.ModifierGroupRegister;
+import net.tazgirl.survivor.saved_data.registers.modifier_group.RegisterModifierGroup;
 import net.tazgirl.tutilz.admin.Logging;
 import net.tazgirl.magicjson.data.Constants;
 import net.tazgirl.magicjson.helpers.InputStreamToJson;
 import net.tazgirl.survivor.main_game.mobs.wave_mobs.WaveMob;
-import net.tazgirl.survivor.saved_data.registers.modifier.ModifierStorageRecordRegister;
+import net.tazgirl.survivor.saved_data.registers.modifier.RegisterModifierStorageRecord;
 import net.tazgirl.survivor.main_game.mobs.modifiers.storage.ModifierStorageSet;
 import net.tazgirl.tutilz.registers.MakeRegistryAddress;
 
@@ -36,7 +35,7 @@ public class WaveMobDataProcessing
             WaveMob<?> entryMob = entryToWaveMob(entry);
             if(entryMob != null)
             {
-                WaveMobRegister.put(MakeRegistryAddress.withPath(entry.getKey(), dataPath),entryMob);
+                RegisterWaveMob.put(MakeRegistryAddress.withPath(entry.getKey(), dataPath),entryMob);
             }
         }
     }
@@ -82,33 +81,40 @@ public class WaveMobDataProcessing
 
         try
         {
-            if(modifiersElement instanceof JsonArray array)
+            modifiersElement.getAsJsonArray().forEach(element ->
             {
-                array.forEach(element ->
+                String elementString = element.getAsString();
+
+                if(RegisterModifierStorageRecord.hasAddress(elementString))
                 {
-                    String elementString = element.getAsString();
-
-                    if(ModifierStorageRecordRegister.hasAddress(elementString))
-                    {
-                        modifierStorageAddresses.add(elementString);
-                    }
-                    else if(ModifierGroupRegister.hasAddress(elementString))
-                    {
-                        modifierStorageAddresses.addAll(ModifierGroupRegister.get(elementString));
-                    }
-
-
-                });
-            }
+                    modifierStorageAddresses.add(elementString);
+                }
+                else if(RegisterModifierGroup.hasAddress(elementString))
+                {
+                    modifierStorageAddresses.addAll(RegisterModifierGroup.get(elementString));
+                }
+            });
         }
-        catch (Exception ignored){}
+        catch (Exception ignored)
+        {
+
+        }
 
         try
         {
-            if(guaranteedModifiersElement instanceof JsonArray array)
+            guaranteedModifiersElement.getAsJsonArray().forEach(element ->
             {
-                array.forEach(element -> guaranteedModifierStorageAddresses.add(element.getAsString()));
-            }
+                String elementString = element.getAsString();
+
+                if(RegisterModifierStorageRecord.hasAddress(elementString))
+                {
+                    guaranteedModifierStorageAddresses.add(elementString);
+                }
+                else if(RegisterModifierGroup.hasAddress(elementString))
+                {
+                    guaranteedModifierStorageAddresses.addAll(RegisterModifierGroup.get(elementString));
+                }
+            });
         }
         catch (Exception ignored){}
 
@@ -124,8 +130,8 @@ public class WaveMobDataProcessing
 
         EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(entityTypeLocation));
 
-        ModifierStorageSet storageSet = new ModifierStorageSet(ModifierStorageRecordRegister.getList(modifierStorageAddresses));
-        ModifierStorageSet guaranteedStorageSet = new ModifierStorageSet(ModifierStorageRecordRegister.getList(guaranteedModifierStorageAddresses));
+        ModifierStorageSet storageSet = new ModifierStorageSet(RegisterModifierStorageRecord.getList(modifierStorageAddresses));
+        ModifierStorageSet guaranteedStorageSet = new ModifierStorageSet(RegisterModifierStorageRecord.getList(guaranteedModifierStorageAddresses));
 
         WaveMob<?> waveMob = new WaveMob<>(entityType, storageSet, cost, weight);
 

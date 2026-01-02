@@ -7,6 +7,6 @@ public class WaveMobFetchEvent extends RegistryEvent<WaveMob<?>>
 {
     public WaveMobFetchEvent()
     {
-        super(WaveMobRegister.register);
+        super(RegisterWaveMob.register);
     }
 }

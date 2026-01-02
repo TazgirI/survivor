@@ -4,7 +4,7 @@ import net.tazgirl.survivor.main_game.mobs.wave_mobs.WaveMob;
 
 import java.util.*;
 
-public class WaveMobRegister
+public class RegisterWaveMob
 {
     static final Map<String, WaveMob<?>> register = new HashMap<>();
 
@@ -73,4 +73,8 @@ public class WaveMobRegister
         return register.toString();
     }
 
+    public static void ClearWholeRegisterDanger()
+    {
+        register.clear();
+    }
 }

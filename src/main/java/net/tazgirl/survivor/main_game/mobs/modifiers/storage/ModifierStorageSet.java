@@ -67,7 +67,7 @@ public class ModifierStorageSet
 
         for(ModifierStorageRecord<?> record: modifiers)
         {
-            if(record.cost() <= budget)
+            if(record.cost().get() <= budget)
             {
                 returnList.add(record);
             }
@@ -96,7 +96,7 @@ public class ModifierStorageSet
 
         for(ModifierStorageRecord<?> record: modifiers)
         {
-            total += record.weight();
+            total += record.weight().get();
 
             if(total >= index)
             {
@@ -116,7 +116,7 @@ public class ModifierStorageSet
 
         for(ModifierStorageRecord<?> record: modifiers)
         {
-             totalModifierWeight += record.weight();
+             totalModifierWeight += record.weight().get();
         }
     }
 
@@ -126,7 +126,7 @@ public class ModifierStorageSet
 
 
         modifiersDescendingCost = modifiers;
-        modifiersDescendingCost.sort(Comparator.comparingInt(record -> ((ModifierStorageRecord<?>) record).cost()).reversed());
+        modifiersDescendingCost.sort(Comparator.comparingInt(record -> ((ModifierStorageRecord<?>) record).cost().get()).reversed());
     }
 
     private boolean IsModifiersEmpty()
