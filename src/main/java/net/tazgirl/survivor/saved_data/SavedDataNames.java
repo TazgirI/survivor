@@ -4,7 +4,7 @@ import com.google.common.base.Enums;
 
 public enum SavedDataNames
 {
-    MOB_SPAWN_POINTS,
+    MOB_SPAWN_POINTS;
 
 
 

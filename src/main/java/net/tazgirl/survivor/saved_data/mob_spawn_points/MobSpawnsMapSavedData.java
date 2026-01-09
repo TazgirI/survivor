@@ -53,11 +53,11 @@ public class MobSpawnsMapSavedData extends SavedData
         return tag;
     }
 
-    public static MobSpawnsMapSavedData load(CompoundTag tag, HolderLookup.Provider lookupProvider)
+    public static MobSpawnsMapSavedData load(CompoundTag compoundTag, HolderLookup.Provider lookupProvider)
     {
         MobSpawnsMapSavedData mobSpawnsMapSavedData = new MobSpawnsMapSavedData();
 
-        ListTag listTag = tag.getList("MobSpawnEntries", 10);
+        ListTag listTag = compoundTag.getList("MobSpawnEntries", 10);
 
         CompoundTag pairTag;
 

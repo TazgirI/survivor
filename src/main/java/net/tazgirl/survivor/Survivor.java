@@ -7,6 +7,7 @@ import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.vehicle.Minecart;
 import net.tazgirl.survivor.events.CollectCommandBranchesEvent;
 
+import net.tazgirl.survivor.main_game.GameState;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -57,17 +58,13 @@ public class Survivor
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
-    private void commonSetup(FMLCommonSetupEvent event) {
-        // Some common setup code
-        LOGGER.info("HELLO FROM COMMON SETUP");
+    private void commonSetup(FMLCommonSetupEvent event)
+    {
 
+    }
 
-        if (Config.LOG_DIRT_BLOCK.getAsBoolean()) {
-            LOGGER.info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT));
-        }
-
-        LOGGER.info("{}{}", Config.MAGIC_NUMBER_INTRODUCTION.get(), Config.MAGIC_NUMBER.getAsInt());
-
-        Config.ITEM_STRINGS.get().forEach((item) -> LOGGER.info("ITEM >> {}", item));
+    public static GameState.State gamestate()
+    {
+        return GameState.currentState;
     }
 }

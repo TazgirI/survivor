@@ -8,6 +8,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.EntityType;
+import net.tazgirl.magicjson.optionals.OptionalFromElement;
+import net.tazgirl.magicjson.optionals.numbers.IntegerStatementOptional;
 import net.tazgirl.survivor.Survivor;
 import net.tazgirl.survivor.saved_data.registers.modifier_group.RegisterModifierGroup;
 import net.tazgirl.tutilz.admin.Logging;
@@ -17,6 +19,8 @@ import net.tazgirl.survivor.main_game.mobs.wave_mobs.WaveMob;
 import net.tazgirl.survivor.saved_data.registers.modifier.RegisterModifierStorageRecord;
 import net.tazgirl.survivor.main_game.mobs.modifiers.storage.ModifierStorageSet;
 import net.tazgirl.tutilz.registers.MakeRegistryAddress;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -26,6 +30,8 @@ import java.util.Objects;
 
 public class WaveMobDataProcessing
 {
+    // TODO: All the data processing is a mess, fix much later
+
     public static String dataPath = "survivor/wave_mob";
 
     public static void ProcessWaveMobData()
@@ -56,76 +62,81 @@ public class WaveMobDataProcessing
         }
 
         // Optionals
-        JsonElement modifiersElement = jsonObject.get("modifiers");;
+        JsonElement modifiersElement = jsonObject.get("modifiers");
         JsonElement guaranteedModifiersElement = jsonObject.get("guaranteed_modifiers");
-        JsonElement firstWaveElement = jsonObject.get("first_wave");;
+        JsonElement firstWaveElement = jsonObject.get("first_wave");
 
-        String entityTypeLocation;
+        String entityTypeLocation = null;
+
         List<String> modifierStorageAddresses = new ArrayList<>();
         List<String> guaranteedModifierStorageAddresses = new ArrayList<>();
-        int cost;
-        int weight;
-        int firstWave = 0;
-        try
+
+        IntegerStatementOptional cost = OptionalFromElement.INT(jsonObject.get("cost"));
+        IntegerStatementOptional weight = OptionalFromElement.INT(jsonObject.get("weight"));
+
+        IntegerStatementOptional firstWave = IntegerStatementOptional.from(0);
+
+        if(cost == null || weight == null)
         {
-            // Must exist
-            entityTypeLocation = jsonObject.get("entity_type").getAsString();
-            cost = jsonObject.get("cost").getAsInt();
-            weight = jsonObject.get("weight").getAsInt();
-        }
-        catch (IllegalStateException | NullPointerException e)
-        {
-            Logging.Warn("JsonObject \"" + entry.getKey() + "\" failed to process. Please verify all expected values are present and in an acceptable form even if empty", Survivor.LOGGER);
+            logFail(entry);
             return null;
         }
 
-        try
+        JsonElement entityTypeLocationElement = jsonObject.get("entity_type");
+        if(entityTypeLocationElement != null && entityTypeLocationElement.isJsonPrimitive())
+        {
+            entityTypeLocation = entityTypeLocationElement.getAsString();
+        }
+        else
+        {
+            logFail(entry);
+            return null;
+        }
+
+        if(modifiersElement != null && modifiersElement.isJsonArray())
         {
             modifiersElement.getAsJsonArray().forEach(element ->
             {
-                String elementString = element.getAsString();
+                if(element.isJsonPrimitive())
+                {
+                    String elementString = element.getAsString();
 
-                if(RegisterModifierStorageRecord.hasAddress(elementString))
-                {
-                    modifierStorageAddresses.add(elementString);
-                }
-                else if(RegisterModifierGroup.hasAddress(elementString))
-                {
-                    modifierStorageAddresses.addAll(RegisterModifierGroup.get(elementString));
+                    if(RegisterModifierStorageRecord.hasAddress(elementString))
+                    {
+                        modifierStorageAddresses.add(elementString);
+                    }
+                    else if(RegisterModifierGroup.hasAddress(elementString))
+                    {
+                        modifierStorageAddresses.addAll(RegisterModifierGroup.get(elementString));
+                    }
                 }
             });
         }
-        catch (Exception ignored)
-        {
 
-        }
-
-        try
+        if(guaranteedModifiersElement != null && guaranteedModifiersElement.isJsonArray())
         {
             guaranteedModifiersElement.getAsJsonArray().forEach(element ->
             {
-                String elementString = element.getAsString();
+                if(element.isJsonPrimitive())
+                {
+                    String elementString = element.getAsString();
 
-                if(RegisterModifierStorageRecord.hasAddress(elementString))
-                {
-                    guaranteedModifierStorageAddresses.add(elementString);
-                }
-                else if(RegisterModifierGroup.hasAddress(elementString))
-                {
-                    guaranteedModifierStorageAddresses.addAll(RegisterModifierGroup.get(elementString));
+                    if(RegisterModifierStorageRecord.hasAddress(elementString))
+                    {
+                        guaranteedModifierStorageAddresses.add(elementString);
+                    }
+                    else if(RegisterModifierGroup.hasAddress(elementString))
+                    {
+                        guaranteedModifierStorageAddresses.addAll(RegisterModifierGroup.get(elementString));
+                    }
                 }
             });
         }
-        catch (Exception ignored){}
 
-        try
+        if(firstWaveElement != null)
         {
-            if(firstWaveElement instanceof JsonPrimitive primitive)
-            {
-                firstWave = primitive.getAsInt();
-            }
+            firstWave = OptionalFromElement.INT(firstWaveElement);
         }
-        catch (Exception ignored){}
 
 
         EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(entityTypeLocation));
@@ -148,5 +159,10 @@ public class WaveMobDataProcessing
         ResourceManager resourceManager = Constants.server.getResourceManager();
 
         return resourceManager.listResources(dataPath, path -> path.getPath().endsWith(".json"));
+    }
+
+    private static void logFail(Map.Entry<ResourceLocation, Resource> entry)
+    {
+        Logging.Warn("JsonObject \"" + entry.getKey() + "\" failed to process. Please verify all expected values are present and in an acceptable form even if empty", Survivor.LOGGER);
     }
 }
