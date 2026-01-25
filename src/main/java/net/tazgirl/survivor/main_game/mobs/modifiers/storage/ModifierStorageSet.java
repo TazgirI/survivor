@@ -1,6 +1,11 @@
 package net.tazgirl.survivor.main_game.mobs.modifiers.storage;
 
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.tazgirl.survivor.Survivor;
+import net.tazgirl.survivor.events.WaveConstructionStartedEvent;
+import net.tazgirl.survivor.events.WaveStartedEvent;
+import net.tazgirl.survivor.main_game.CoreGameData;
 import net.tazgirl.tutilz.admin.Logging;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -11,7 +16,10 @@ public class ModifierStorageSet
 {
     private final List<ModifierStorageRecord<?>> modifiers = new ArrayList<>();
 
+    private List<CachedModifierStorageRecord> cachedModifiers = null;
+
     private boolean dirty = false;
+    private boolean cacheMode = false;
 
     private int totalModifierWeight;
     private List<ModifierStorageRecord<?>> modifiersDescendingCost;
@@ -26,9 +34,16 @@ public class ModifierStorageSet
     {
         if(IsModifiersEmpty()){return;}
 
-
-        CalculateModifierWeight();
-        CalculateModifiersByCostDescending();
+        if(cacheMode)
+        {
+            totalModifierWeight = cachedModifiers.stream().mapToInt(CachedModifierStorageRecord::weight).sum();
+            cachedModifiers.sort(Comparator.comparingInt(CachedModifierStorageRecord::cost).reversed());
+        }
+        else
+        {
+            totalModifierWeight = modifiers.stream().mapToInt(ModifierStorageRecord::getWeight).sum();
+            modifiers.sort(Comparator.comparingInt(record -> ((ModifierStorageRecord<?>) record).getCost()).reversed());
+        }
 
         dirty = false;
     }
@@ -36,7 +51,7 @@ public class ModifierStorageSet
     public void addSetOfMobModifiers(Collection<ModifierStorageRecord<?>> constructRecords)
     {
         modifiers.addAll(constructRecords);
-        dirty = false;
+        dirty = true;
     }
 
     public void addMobModifier(ModifierStorageRecord<?> record)
@@ -59,44 +74,105 @@ public class ModifierStorageSet
         return new ArrayList<>(modifiers);
     }
 
-    public List<ModifierStorageRecord<?>> getModifiersInBudget(int budget)
+    public List<CachedModifierStorageRecord> getModifiersInBudget(int budget)
     {
         if(budget == 0 || IsModifiersEmpty()){return null;}
 
-        List<ModifierStorageRecord<?>> returnList = new ArrayList<>();
+        List<CachedModifierStorageRecord> returnList = new ArrayList<>();
 
-        for(ModifierStorageRecord<?> record: modifiers)
+        if(cacheMode)
         {
-            if(record.cost().get() <= budget)
+            for(CachedModifierStorageRecord record: cachedModifiers)
             {
-                returnList.add(record);
+                if(record.cost() <= budget)
+                {
+                    returnList.add(record);
+                }
             }
         }
+        else
+        {
+            for(ModifierStorageRecord<?> record: modifiers)
+            {
+                if(record.cost().get() <= budget)
+                {
+                    returnList.add(record.constructCachedValues());
+                }
+            }
+        }
+
 
         return returnList;
     }
 
-    public ModifierStorageRecord<?> randomModifier()
+    public CachedModifierStorageRecord randomModifier()
     {
         if(IsModifiersEmpty()){return null;}
 
-        return modifiers.get(new Random().nextInt(modifiers.size()));
+        if(cacheMode)
+        {
+            return cachedModifiers.get(new Random().nextInt(cachedModifiers.size()));
+        }
+        else
+        {
+            return modifiers.get(new Random().nextInt(modifiers.size())).constructCachedValues();
+        }
     }
 
-    public ModifierStorageRecord<?> randomModifierByWeight()
+    public CachedModifierStorageRecord randomModifierByWeight()
     {
         if(IsModifiersEmpty()){return null;}
 
 
-        if(dirty){UpdateAll();}
+        if(dirty || !cacheMode){UpdateAll();}
 
-        // TODO: Figure out what the +1 is for
+        // TO-not-DO: Figure out what the +1 is for
+        // +1 is so Random can hit max index
         int index = new Random().nextInt(totalModifierWeight) + 1;
         int total = 0;
 
-        for(ModifierStorageRecord<?> record: modifiers)
+        if(cacheMode)
         {
-            total += record.weight().get();
+            for(CachedModifierStorageRecord record: cachedModifiers)
+            {
+                total += record.weight();
+
+                if(total >= index)
+                {
+                    return record;
+                }
+            }
+
+            return cachedModifiers.get(new Random().nextInt(cachedModifiers.size()));
+        }
+        else
+        {
+            for(ModifierStorageRecord<?> record: modifiers)
+            {
+                total += record.weight().get();
+
+                if(total >= index)
+                {
+                    return record.constructCachedValues();
+                }
+            }
+
+            return modifiers.get(new Random().nextInt(modifiers.size())).constructCachedValues();
+        }
+    }
+
+    public CachedModifierStorageRecord getCachedModifierByWeight(List<CachedModifierStorageRecord> modifierList)
+    {
+        int totalWeight = modifierList.stream().mapToInt(CachedModifierStorageRecord::weight).sum();
+
+        // TO-not-DO: Figure out what the +1 is for
+        // +1 is so Random can hit max index
+        int index = new Random().nextInt(0, totalWeight) + 1;
+        int total = 0;
+
+        for(CachedModifierStorageRecord record: modifierList)
+        {
+            total += record.weight();
 
             if(total >= index)
             {
@@ -104,29 +180,19 @@ public class ModifierStorageSet
             }
         }
 
-        return modifiers.get(new Random().nextInt(modifiers.size()));
+        return cachedModifiers.get(new Random(CoreGameData.seedHolder.waveSeed.newSeed()).nextInt(cachedModifiers.size()));
     }
 
-    public void CalculateModifierWeight()
+    public CachedModifierStorageRecord getInBudgetRandomByWeight(int budget)
     {
-        if(IsModifiersEmpty()){return;}
+        List<CachedModifierStorageRecord> inBudget = getModifiersInBudget(budget);
 
-
-         totalModifierWeight = 0;
-
-        for(ModifierStorageRecord<?> record: modifiers)
+        if(inBudget == null)
         {
-             totalModifierWeight += record.weight().get();
+            return null;
         }
-    }
 
-    public void CalculateModifiersByCostDescending()
-    {
-        if(IsModifiersEmpty()){return;}
-
-
-        modifiersDescendingCost = modifiers;
-        modifiersDescendingCost.sort(Comparator.comparingInt(record -> ((ModifierStorageRecord<?>) record).cost().get()).reversed());
+        return getCachedModifierByWeight(inBudget);
     }
 
     private boolean IsModifiersEmpty()
@@ -138,6 +204,34 @@ public class ModifierStorageSet
         }
 
         return false;
+    }
+
+    public void enterCacheMode()
+    {
+        cacheMode = true;
+
+        cachedModifiers = new ArrayList<>();
+
+        for(ModifierStorageRecord<?> modifier : modifiers)
+        {
+            cachedModifiers.add(modifier.constructCachedValues());
+        }
+
+    }
+
+    public void exitCacheMode()
+    {
+        cacheMode = false;
+    }
+
+    public int cheapestCachedCost()
+    {
+        if(cacheMode && !cachedModifiers.isEmpty())
+        {
+            return cachedModifiers.stream().mapToInt(CachedModifierStorageRecord::cost).min().orElse(-1);
+        }
+
+        return -1;
     }
 
     @Override

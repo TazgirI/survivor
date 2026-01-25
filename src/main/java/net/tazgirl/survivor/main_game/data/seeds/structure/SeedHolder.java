@@ -17,13 +17,12 @@ public class SeedHolder
 
     public Map<String, SurvivorSeed> allSeeds;
 
-    public SeedHolder()
+    public SeedHolder(Long seed)
     {
-        new SeedHolder(new Random().nextLong());
-    }
-
-    public SeedHolder(long seed)
-    {
+        if(seed == Long.MIN_VALUE)
+        {
+            seed = new Random().nextLong();
+        }
         overallSeed = new SurvivorSeed(seed);
         Logging.Log("New overallSeed is: " + overallSeed.seed, Survivor.LOGGER);
         fillSeeds();
@@ -52,17 +51,24 @@ public class SeedHolder
 
     private void fillSeeds()
     {
+        // Always increment even if unused so if you provide an overall, general and wave seed, itemSeed will still receive the third seed in overallSeed as it would if there was no provided general and wave seed
+        long nextSeed = overallSeed.newSeed();
+
         if(generalSeed == null)
         {
-            generalSeed = new SurvivorSeed(overallSeed.newSeed());
+            generalSeed = new SurvivorSeed(nextSeed);
         }
+
+        nextSeed = overallSeed.newSeed();
         if(waveSeed == null)
         {
-            waveSeed = new SurvivorSeed(overallSeed.newSeed());
+            waveSeed = new SurvivorSeed(nextSeed);
         }
+
+        nextSeed = overallSeed.newSeed();
         if (itemSeed == null)
         {
-            itemSeed = new SurvivorSeed(overallSeed.newSeed());
+            itemSeed = new SurvivorSeed(nextSeed);
         }
 
         allSeeds = Map.of(
@@ -73,4 +79,8 @@ public class SeedHolder
         );
     }
 
+    public static SeedHolder newRandom()
+    {
+        return new SeedHolder(Long.MIN_VALUE);
+    }
 }

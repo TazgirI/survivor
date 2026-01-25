@@ -5,6 +5,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.tazgirl.survivor.Survivor;
+import net.tazgirl.survivor.main_game.players.RegisterPlayer;
 import net.tazgirl.survivor.saved_data.registers.mob_sets.RegisterMobSets;
 import net.tazgirl.survivor.saved_data.registers.modifier.RegisterModifierStorageRecord;
 import net.tazgirl.survivor.saved_data.registers.modifier_group.RegisterModifierGroup;
@@ -20,5 +21,7 @@ public class ServerStopped
         RegisterModifierStorageRecord.ClearWholeRegisterDanger();
         RegisterModifierGroup.ClearWholeRegisterDanger();
         RegisterWaveMob.ClearWholeRegisterDanger();
+
+        RegisterPlayer.clearWholeRegisterDanger();
     }
 }

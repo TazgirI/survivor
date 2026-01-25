@@ -8,6 +8,7 @@ import net.minecraft.world.entity.vehicle.Minecart;
 import net.tazgirl.survivor.events.CollectCommandBranchesEvent;
 
 import net.tazgirl.survivor.main_game.GameState;
+import net.tazgirl.survivor.vanilla_registration.Items;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -54,6 +55,7 @@ public class Survivor
         modEventBus.addListener(this::commonSetup);
 
 
+        Items.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }

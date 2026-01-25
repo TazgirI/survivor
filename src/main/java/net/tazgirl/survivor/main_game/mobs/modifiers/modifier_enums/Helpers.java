@@ -1,4 +1,4 @@
-//package net.tazgirl.survivor.main_game.mobs.modifiers.Enums;
+//package net.tazgirl.survivor.main_game.mobs.modifiers.modifier_enums;
 //
 //import com.google.gson.JsonElement;
 //import net.minecraft.core.Holder;

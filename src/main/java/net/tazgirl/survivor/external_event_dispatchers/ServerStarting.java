@@ -7,8 +7,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.tazgirl.survivor.Globals;
 import net.tazgirl.survivor.Survivor;
-import net.tazgirl.survivor.Inits.InitSavedData;
-import net.tazgirl.survivor.main_game.CoreGameData;
+import net.tazgirl.survivor.init.InitSavedData;
 import net.tazgirl.survivor.saved_data.registers.mob_sets.MobSetsDataProcessing;
 import net.tazgirl.survivor.saved_data.registers.mob_sets.MobSetsFetchEvent;
 import net.tazgirl.survivor.saved_data.registers.modifier.ModifierDataProcessing;
@@ -42,7 +41,6 @@ public class ServerStarting
         MobSetsDataProcessing.LoopJsons();
         NeoForge.EVENT_BUS.post(new MobSetsFetchEvent());
 
-        CoreGameData.fetchServerStarting();
     }
 
 }

@@ -1,12 +1,20 @@
 package net.tazgirl.survivor.main_game.mobs;
 
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.tazgirl.survivor.main_game.buffs.BuffHolder;
+import net.tazgirl.survivor.main_game.mobs.modifiers.modifier_objects.base.ModifierActiveBase;
 import net.tazgirl.survivor.main_game.mobs.wave_mobs.WaveMob;
 
-public class ActiveMob<T extends LivingEntity>
+import java.util.ArrayList;
+import java.util.List;
+
+public class ActiveMob<T extends Entity> extends BuffHolder
 {
     public T entity;
     public WaveMob<T> waveMob;
+
+    public List<ModifierActiveBase<?>> modifiers = new ArrayList<>();
 
     public SpawnTrigger spawnTrigger;
     public DamageTrigger.Pre damageTriggerPre;

@@ -11,10 +11,10 @@ import net.tazgirl.survivor.Survivor;
 import net.tazgirl.tutilz.admin.Logging;
 import net.tazgirl.magicjson.data.Constants;
 import net.tazgirl.magicjson.helpers.InputStreamToJson;
-import net.tazgirl.survivor.main_game.mobs.modifiers.Enums.ModifierTriggers;
+import net.tazgirl.survivor.main_game.mobs.modifiers.modifier_enums.ModifierTriggers;
 import net.tazgirl.survivor.main_game.mobs.modifiers.NameModifierRecord;
 import net.tazgirl.survivor.main_game.mobs.modifiers.storage.ModifierStorageRecord;
-import net.tazgirl.survivor.main_game.mobs.modifiers.Enums.ModifierArgTypes;
+import net.tazgirl.survivor.main_game.mobs.modifiers.modifier_enums.ModifierArgTypes;
 import net.tazgirl.survivor.main_game.mobs.modifiers.modifier_objects.base.ModifierStorageArgs;
 import net.tazgirl.tutilz.registers.MakeRegistryAddress;
 

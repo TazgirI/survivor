@@ -1,12 +1,10 @@
-package net.tazgirl.survivor.main_game.mobs.modifiers.Enums;
+package net.tazgirl.survivor.main_game.mobs.modifiers.modifier_enums;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import net.tazgirl.magicjson.optionals.OptionalFromElement;
 import net.tazgirl.survivor.main_game.mobs.modifiers.modifier_objects.ModifierCombination;
 import net.tazgirl.survivor.main_game.mobs.modifiers.modifier_objects.PotionEffectModifier;
 import net.tazgirl.survivor.main_game.mobs.modifiers.modifier_objects.base.ModifierStorageArgs;
-import org.checkerframework.checker.units.qual.C;
 
 import java.util.ArrayList;
 import java.util.List;

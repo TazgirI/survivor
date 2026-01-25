@@ -2,13 +2,23 @@ package net.tazgirl.survivor.main_game.mobs.wave_mobs;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.NeoForge;
 import net.tazgirl.magicjson.optionals.numbers.IntegerStatementOptional;
 import net.tazgirl.survivor.Survivor;
+import net.tazgirl.survivor.events.WaveConstructionStartedEvent;
+import net.tazgirl.survivor.events.WaveStartedEvent;
 import net.tazgirl.survivor.events.wave_setup.WaveSetupEvent;
 import net.tazgirl.survivor.main_game.FullContextData;
+import net.tazgirl.survivor.main_game.mobs.modifiers.storage.ModifierStorageRecord;
 import net.tazgirl.survivor.main_game.mobs.modifiers.storage.ModifierStorageSet;
+import net.tazgirl.survivor.main_game.players.PlayerEvents;
+import net.tazgirl.survivor.main_game.wave.IncomingMob;
 import net.tazgirl.tutilz.admin.Logging;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -26,6 +36,8 @@ public class WaveMob<T extends Entity> implements IWaveMob
 
     protected IntegerStatementOptional firstWave = new IntegerStatementOptional(0,0);
 
+    int cheapestModifier;
+
     protected Map<IntegerStatementOptional, Consumer<FullContextData>> waveTriggersPre = new HashMap<>();
     protected Map<IntegerStatementOptional, Consumer<FullContextData>> waveTriggersPost = new HashMap<>();
 
@@ -37,23 +49,14 @@ public class WaveMob<T extends Entity> implements IWaveMob
         this.modifiers = modifiers;
         this.cost = cost;
         this.weight = weight;
+
+        NeoForge.EVENT_BUS.addListener(EventPriority.HIGHEST,WaveConstructionStartedEvent.class, this::onWaveConstructionStart);
+        NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,WaveStartedEvent.class, this::onWaveStart);
     }
 
     public ModifierStorageSet getModifiers()
     {
         return modifiers;
-    }
-
-
-    public void WaveSetupPre(WaveSetupEvent.Pre event)
-    {
-
-    }
-
-
-    public void WaveSetupPost(WaveSetupEvent.Post event)
-    {
-
     }
 
     public EntityType<?> getEntityType()
@@ -118,6 +121,26 @@ public class WaveMob<T extends Entity> implements IWaveMob
         {
             guaranteedModifiers.addSetOfMobModifiers(modifierStorageSet.getModifiers());
         }
+    }
+
+    public IncomingMob<T> incomingMob()
+    {
+        return new IncomingMob<>(this);
+    }
+
+    public void onWaveConstructionStart(WaveConstructionStartedEvent event)
+    {
+        modifiers.enterCacheMode();
+    }
+
+    public void onWaveStart(WaveStartedEvent event)
+    {
+        modifiers.exitCacheMode();
+    }
+
+    public CachedWaveMob cacheValues()
+    {
+        return new CachedWaveMob(this, cost.get(), weight.get());
     }
 
     @Override

@@ -1,10 +1,21 @@
 package net.tazgirl.survivor.main_game;
 
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import net.tazgirl.survivor.external_event_dispatchers.ServerStarted;
+
 import java.util.List;
 
 public class GameState
 {
     public static State currentState = State.SETTING_UP;
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onServerStarted(ServerStartedEvent event)
+    {
+        currentState = State.LOBBY;
+    }
 
     public enum State
     {

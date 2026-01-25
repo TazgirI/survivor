@@ -3,7 +3,9 @@ package net.tazgirl.survivor.main_game.mobs.modifiers.modifier_objects;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
 import net.tazgirl.magicjson.optionals.StatementOptional;
+import net.tazgirl.magicjson.optionals.minecraft_types.MobEffectHolderStatementOptional;
 import net.tazgirl.magicjson.optionals.numbers.IntegerStatementOptional;
 import net.tazgirl.survivor.magicjson.SOBuilder;
 import net.tazgirl.survivor.main_game.mobs.ActiveMob;
@@ -23,7 +25,7 @@ public final class PotionEffectModifier
 
     public static class Storage extends ModifierStorageArgs<Storage>
     {
-        public StatementOptional<MobEffect> effect;
+        public MobEffectHolderStatementOptional effect;
         public IntegerStatementOptional duration;
         public IntegerStatementOptional level;
 
@@ -32,7 +34,7 @@ public final class PotionEffectModifier
         {
             switch (string)
             {
-                case "effect" -> effect = SOBuilder.createAbstract(object, MobEffect.class);
+                case "effect" -> effect = SOBuilder.MOB_EFFECT(object);
                 case "duration" -> duration = SOBuilder.INTEGER(object);
                 case "level" -> level = SOBuilder.INTEGER(object);
             }
@@ -51,7 +53,7 @@ public final class PotionEffectModifier
     {
         public Active(ActiveMob<?> activeMob, ModifierStorageRecord<Storage> storageRecord)
         {
-            super(activeMob, storageRecord, storageRecord.trigger().get.apply(activeMob));
+            super(activeMob, storageRecord);
         }
 
         @Override
@@ -64,7 +66,12 @@ public final class PotionEffectModifier
         {
             Storage storage = storageRecord.modifierArgs();
 
-            activeMob.entity.addEffect(new MobEffectInstance(Holder.direct(storage.effect.get()), storage.duration.get(), storage.level.get()));
+            if(activeMob.entity instanceof LivingEntity livingEntity)
+            {
+                livingEntity.addEffect(new MobEffectInstance(storage.effect.getWithArg(livingEntity), storage.duration.get(), storage.level.get()));
+            }
+
+
         }
     }
 

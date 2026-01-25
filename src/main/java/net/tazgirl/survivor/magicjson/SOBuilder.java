@@ -3,7 +3,9 @@ package net.tazgirl.survivor.magicjson;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffects;
 import net.tazgirl.magicjson.optionals.StatementOptional;
+import net.tazgirl.magicjson.optionals.minecraft_types.MobEffectHolderStatementOptional;
 import net.tazgirl.magicjson.optionals.numbers.DoubleStatementOptional;
 import net.tazgirl.magicjson.optionals.numbers.FloatStatementOptional;
 import net.tazgirl.magicjson.optionals.numbers.IntegerStatementOptional;
@@ -34,6 +36,8 @@ public class SOBuilder
 
         return new StatementOptional<T>(value, (T) defaultValue);
     }
+
+    public static MobEffectHolderStatementOptional MOB_EFFECT(Object value){return new MobEffectHolderStatementOptional(value, MobEffects.NIGHT_VISION);}
 
     public static IntegerStatementOptional INTEGER(Object value)
     {

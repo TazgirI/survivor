@@ -1,6 +1,7 @@
 package net.tazgirl.survivor;
 
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.storage.DimensionDataStorage;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -17,6 +18,7 @@ public class Globals
     public static MinecraftServer server = null;
 
     public static DimensionDataStorage overworldData = null;
+    public static ServerLevel overworld = null;
 
     public static Logger logger = Survivor.LOGGER;
 
@@ -25,11 +27,10 @@ public class Globals
     {
         server = event.getServer();
 
-        overworldData = server.overworld().getDataStorage();
+        overworld = server.overworld();
+
+        overworldData = overworld.getDataStorage();
     }
-
-
-    public static Map<Vec3, Vec2> getMobSpawnPoints() {return MobSpawnsMapSavedData.getForOverworld().getMobSpawnsMap();}
 
 
 }

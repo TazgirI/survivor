@@ -5,6 +5,7 @@ import com.daqem.uilib.api.client.gui.component.scroll.ScrollOrientation;
 import com.daqem.uilib.client.gui.component.scroll.ScrollBarComponent;
 import com.daqem.uilib.client.gui.component.scroll.ScrollContentComponent;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.tazgirl.magicjson.SendMessage;
@@ -29,42 +30,35 @@ public class RelicItemRowComponent extends ScrollContentComponent
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta)
     {
         super.render(graphics, mouseX, mouseY, delta);
+    }
 
+    public ItemStack getTooltip(int mouseX, int mouseY)
+    {
         int y = mouseY + scrollBar.getScrollWheel().get().getScrollValue() - scrollBar.getParent().getY() - screen.gap;
-
-        graphics.fill(mouseX - scrollBar.getParent().getX() - 5, y - 5, mouseX - scrollBar.getParent().getX() + 5, y + 5, 0x80FF0000);
-
-
 
         int yDifferential = (getY() - y) * -1;
 
-        if(yDifferential <= screen.itemSize && yDifferential >= 0)
+        if(yDifferential <= screen.itemSize - screen.gap && yDifferential >= -screen.gap)
         {
+            int x = mouseX - scrollBar.getParent().getX() - screen.margin;
 
-            SendMessage.All(String.valueOf(yDifferential));
+            int moduloMouseX = x % (getContentSpacing() + screen.itemSize);
 
-            int x = mouseX - scrollBar.getParent().getX();
+            SendMessage.All("Mod Mouse X: " + moduloMouseX + "screen.gap: " + screen.gap + " screen.itemSize: " + screen.itemSize + "screen.margin: " + screen.margin);
+            System.out.println("Mod Mouse X: " + moduloMouseX + "screen.gap: " + screen.gap + " screen.itemSize: " + screen.itemSize + "screen.margin: " + screen.margin);
 
-            IComponent<?> child = getChildren().get(0);
-
-            int moduloMouseX = x % (getContentSpacing() + child.getWidth());
-
-            graphics.fill(moduloMouseX - 5, getY() - 5, moduloMouseX + 5, getY() + 5, 0x80FF0000);
-
-
-            if(moduloMouseX <= child.getWidth())
+            if(moduloMouseX - screen.gap - screen.margin <= screen.itemSize && moduloMouseX - screen.gap >= 0)
             {
-                int index = x / (getContentSpacing() + child.getWidth());
+                int index = x / (getContentSpacing() + screen.itemSize );
 
                 if(index >= 0 & index <= getChildren().size() - 1)
                 {
                     RelicItemDisplayComponent item = (RelicItemDisplayComponent) getChildren().get(index);
-                    item.renderTooltip(graphics, mouseX, mouseY);
+                    return item.itemStack;
                 }
             }
         }
-        // Get if mouse is at correct y for this scroll content
-        // Get if mouse is at the x between width values then find the multiple of content spacing (50) to get the index to render a tooltip for
 
+        return null;
     }
 }

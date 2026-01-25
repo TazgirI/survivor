@@ -12,9 +12,12 @@ import com.daqem.uilib.client.gui.texture.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ItemLike;
+import net.neoforged.neoforge.client.ClientTooltipFlag;
 import net.tazgirl.survivor.gui.relic_inventory.components.RelicItemDisplayComponent;
 import net.tazgirl.survivor.gui.relic_inventory.components.RelicItemRowComponent;
 import net.tazgirl.survivor.translation_keys.ui.relic_screen;
@@ -33,6 +36,8 @@ public class RelicInventoryScreen extends AbstractScreen
     public int itemSize;
     public int gap;
     public ScrollBarComponent scrollBar;
+    public ScrollContentComponent verticalContent;
+    public int margin;
 
     @Override
     public void startScreen()
@@ -42,22 +47,22 @@ public class RelicInventoryScreen extends AbstractScreen
 
         setBackground(Backgrounds.getDefaultBackground(windowWidth, windowHeight));
 
-
-
         int menuWidth = (int) ((float) windowWidth / 2 * scaleMultiplier());
-        int menuHeight = (int) ((float) windowHeight / 2 * scaleMultiplier());
+        int menuHeight = (int) ((float) windowHeight / 2 * Math.min(scaleMultiplier(), 1.85f));
 
 
         int scrollThickness = menuWidth / 30;
 
-        itemSize = (int) (16 * scaleMultiplier()) ;
-        gap = itemSize / 6;
+        itemSize = Math.min((int) (16 * scaleMultiplier()), 32) ;
+        gap = (int) (16 * scaleMultiplier() / 6);
 
         int itemsPerRow = (menuWidth - scrollThickness - (gap * 2)) / (itemSize + gap);
 
+        margin = ((menuWidth - scrollThickness - (gap * 2)) % (itemSize + gap)) / 2;
 
 
-        ScrollContentComponent scrollContentComponent = new ScrollContentComponent(0, 0, gap + itemSize, ScrollOrientation.VERTICAL);
+
+        ScrollContentComponent scrollContentComponent = new ScrollContentComponent(0, 0, gap, ScrollOrientation.VERTICAL);
 
         ScrollWheelComponent scrollWheelComponent = new ScrollWheelComponent(Textures.SCROLL_WHEEL, 0, 0, scrollThickness + 1);
         ScrollBarComponent scrollBarComponent = new ScrollBarComponent(menuWidth - scrollThickness, 0, scrollThickness, menuHeight + 1, ScrollOrientation.VERTICAL, scrollWheelComponent);
@@ -90,8 +95,9 @@ public class RelicInventoryScreen extends AbstractScreen
         }
 
         scrollContentComponent.addChildren(rowComponents);
+        verticalContent = scrollContentComponent;
 
-        ScrollPanelComponent scrollPanelComponent = new ScrollPanelComponent(Textures.SCROLL_PANE, 0, 0, menuWidth, menuHeight, ScrollOrientation.VERTICAL, scrollContentComponent, scrollBarComponent);
+        ScrollPanelComponent scrollPanelComponent = new ScrollPanelComponent(Textures.SCROLL_PANE, margin, gap, menuWidth, menuHeight, ScrollOrientation.VERTICAL, scrollContentComponent, scrollBarComponent);
         scrollPanelComponent.center();
 
         this.addComponent(scrollPanelComponent);
@@ -101,12 +107,43 @@ public class RelicInventoryScreen extends AbstractScreen
     @Override
     public void onTickScreen(GuiGraphics guiGraphics, int i, int i1, float v)
     {
+        ItemStack tooltipStack = checkContentsForTooltip(guiGraphics, i, i1, v);
 
+        if(tooltipStack != null)
+        {
+            List<Component> tooltip = tooltipStack.getTooltipLines(Item.TooltipContext.of(minecraft.level), minecraft.player, ClientTooltipFlag.of(minecraft.options.advancedItemTooltips ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL));
+            guiGraphics.renderTooltip(this.font, tooltip, tooltipStack.getTooltipImage(), tooltipStack, i, i1);
+        }
+    }
+
+    public ItemStack checkContentsForTooltip(GuiGraphics graphics, int x, int y, float delta)
+    {
+        ItemStack result = null;
+        for(int i = 0; i < verticalContent.getChildren().size(); i++)
+        {
+            RelicItemRowComponent row = (RelicItemRowComponent) verticalContent.getChildren().get(i);
+            row.renderTooltipsBase(graphics, x, y, delta);
+
+            if(result == null)
+            {
+                ItemStack temp = row.getTooltip(x, y);
+                if(temp != null)
+                {
+                    result = temp;
+                }
+            }
+        }
+        return result;
     }
 
     public static float scaleMultiplier()
     {
         return 1 + Minecraft.getInstance().options.guiScale().get() * 0.25f;
+    }
+
+    public static int guiScale()
+    {
+        return Minecraft.getInstance().options.guiScale().get();
     }
 
     public static RelicItemDisplayComponent createItem(int x, int y, ItemStack stack, RelicInventoryScreen screen)
@@ -149,5 +186,10 @@ public class RelicInventoryScreen extends AbstractScreen
         }
 
         return returnList;
+    }
+
+    public void renderTooltip(GuiGraphics graphics, ItemStack stack, int x, int y)
+    {
+        graphics.renderTooltip(Minecraft.getInstance().font, stack, x, y);
     }
 }

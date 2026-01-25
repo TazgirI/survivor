@@ -1,6 +1,7 @@
 package net.tazgirl.survivor.saved_data.registers.wave_mob;
 
 import net.tazgirl.survivor.main_game.mobs.wave_mobs.WaveMob;
+import net.tazgirl.survivor.main_game.mobs.wave_mobs.WaveMobStorageSet;
 
 import java.util.*;
 
@@ -76,5 +77,10 @@ public class RegisterWaveMob
     public static void ClearWholeRegisterDanger()
     {
         register.clear();
+    }
+
+    public static WaveMobStorageSet debugTestSet()
+    {
+        return new WaveMobStorageSet(register.keySet().stream().toList());
     }
 }

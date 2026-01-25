@@ -1,6 +1,5 @@
-package net.tazgirl.survivor.main_game.mobs.modifiers.Enums;
+package net.tazgirl.survivor.main_game.mobs.modifiers.modifier_enums;
 
-import net.neoforged.bus.api.Event;
 import net.tazgirl.survivor.main_game.mobs.ActiveMob;
 import net.tazgirl.survivor.main_game.mobs.ActiveMobEvent;
 

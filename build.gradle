@@ -112,9 +112,9 @@ configurations {
 }
 
 dependencies {
-
     implementation files('libs/tutilz-1.0.0.jar')
     implementation files('libs/magicjson-0.1.0.jar')
+    implementation files('libs/uilib-1.0.1-1.21.1-neoforge.jar')
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
@@ -167,4 +167,15 @@ idea {
         downloadSources = true
         downloadJavadoc = true
     }
+}
+
+tasks.register('copyToMain', Copy) {
+    from layout.buildDirectory.dir("/libs")   // lazy provider, safe for config cache
+    into file('C:\\Users\\Migra\\AppData\\Roaming\\.minecraft\\mods')           // static path is fine
+    include '*.jar'
+}
+
+// Make the copy task run after build
+tasks.named('build') {
+    finalizedBy(tasks.named('copyToMain'))
 }
