@@ -7,8 +7,8 @@ import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.tazgirl.survivor.Survivor;
 import net.tazgirl.survivor.players.RegisterPlayer;
 import net.tazgirl.survivor.saved_data.registers.mobs.mob_sets.RegisterMobSets;
-import net.tazgirl.survivor.saved_data.registers.modifier.RegisterModifierStorageRecord;
-import net.tazgirl.survivor.saved_data.registers.modifier_group.RegisterModifierGroup;
+import net.tazgirl.survivor.saved_data.registers.modifiers.modifier.RegisterModifierStorageRecord;
+import net.tazgirl.survivor.saved_data.registers.modifiers.modifier_group.RegisterModifierGroup;
 import net.tazgirl.survivor.saved_data.registers.mobs.wave_mob.RegisterWaveMob;
 
 @EventBusSubscriber(modid = Survivor.MODID)

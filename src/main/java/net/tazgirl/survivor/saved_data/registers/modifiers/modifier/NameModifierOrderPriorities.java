@@ -1,4 +1,4 @@
-package net.tazgirl.survivor.saved_data.registers.modifier;
+package net.tazgirl.survivor.saved_data.registers.modifiers.modifier;
 
 public enum NameModifierOrderPriorities
 {

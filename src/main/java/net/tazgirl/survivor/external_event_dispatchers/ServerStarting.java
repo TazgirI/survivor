@@ -11,10 +11,10 @@ import net.tazgirl.survivor.init.InitSavedData;
 import net.tazgirl.survivor.saved_data.interactive_positions.RegisterInteractionPositions;
 import net.tazgirl.survivor.saved_data.registers.mobs.mob_sets.MobSetsDataProcessing;
 import net.tazgirl.survivor.saved_data.registers.mobs.mob_sets.MobSetsFetchEvent;
-import net.tazgirl.survivor.saved_data.registers.modifier.ModifierDataProcessing;
-import net.tazgirl.survivor.saved_data.registers.modifier.ModifierFetchEvent;
-import net.tazgirl.survivor.saved_data.registers.modifier_group.ModifierGroupDataProcessing;
-import net.tazgirl.survivor.saved_data.registers.modifier_group.ModifierGroupFetchEvent;
+import net.tazgirl.survivor.saved_data.registers.modifiers.modifier.ModifierDataProcessing;
+import net.tazgirl.survivor.saved_data.registers.modifiers.modifier.ModifierFetchEvent;
+import net.tazgirl.survivor.saved_data.registers.modifiers.modifier_group.ModifierGroupDataProcessing;
+import net.tazgirl.survivor.saved_data.registers.modifiers.modifier_group.ModifierGroupFetchEvent;
 import net.tazgirl.survivor.saved_data.registers.mobs.wave_mob.WaveMobDataProcessing;
 import net.tazgirl.survivor.saved_data.registers.mobs.wave_mob.WaveMobFetchEvent;
 

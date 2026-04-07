@@ -1,4 +1,4 @@
-package net.tazgirl.survivor.saved_data.registers.modifier;
+package net.tazgirl.survivor.saved_data.registers.modifiers.modifier;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -8,7 +8,9 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.tazgirl.magicjson.optionals.OptionalFromElement;
 import net.tazgirl.magicjson.optionals.numbers.IntegerStatementOptional;
 import net.tazgirl.survivor.Survivor;
+import net.tazgirl.survivor.SurvivorLogging;
 import net.tazgirl.survivor.mobs.modifiers.modifier_enums.Target;
+import net.tazgirl.survivor.saved_data.registers.RegisterDataProcessing;
 import net.tazgirl.tutilz.admin.Logging;
 import net.tazgirl.magicjson.data.Constants;
 import net.tazgirl.magicjson.helpers.InputStreamToJson;
@@ -31,31 +33,7 @@ public class ModifierDataProcessing
 
     public static void LoopJsons()
     {
-        for(Map.Entry<ResourceLocation, Resource> entry : GetAllModifierData().entrySet())
-        {
-            JsonObject jsonObject;
-            try
-            {
-                jsonObject = InputStreamToJson.getJson(entry.getValue().open());
-            }
-            catch (IOException e)
-            {
-                Logging.Warn("Failed to open \"" + entry.getKey() + "\", skipping file", Survivor.LOGGER);
-                continue;
-            }
-
-            String address = MakeRegistryAddress.withPath(entry.getKey(), dataPath);
-
-            ModifierStorageRecord<?> processedJson = processJsonRoot(jsonObject);
-
-            if(processedJson == null)
-            {
-                Logging.Warn("The Modifier JSON for \"" + entry.getKey().toString() + "\" failed to process correctly into a ModifierStorageRecord", Survivor.LOGGER);
-                continue;
-            }
-
-            RegisterModifierStorageRecord.put(address, processedJson);
-        }
+        RegisterModifierStorageRecord.putAll(RegisterDataProcessing.loopRegisterJson(dataPath, ModifierDataProcessing::processJsonRoot));
     }
 
     public static ModifierStorageRecord<?> processJsonRoot(JsonObject jsonObject)
@@ -91,7 +69,7 @@ public class ModifierDataProcessing
         }
         catch (Exception e)
         {
-            Logging.Debug("A Modifier .json has failed to process an expected value", Survivor.LOGGER);
+            SurvivorLogging.Debug("A Modifier .json has failed to process an expected value");
             return null;
         }
 
@@ -105,7 +83,7 @@ public class ModifierDataProcessing
         catch (Exception e)
         {
             // entry.key() not accessible within this method, nonspecific error message better than passing over a String every time that will only be used here
-            Logging.Log("Could not process or find NameModifier in \"" + jsonObject + "\" this may be intentional", Survivor.LOGGER);
+            SurvivorLogging.Log("Could not process or find NameModifier in \"" + jsonObject + "\" this may be intentional");
         }
 
 
@@ -115,7 +93,7 @@ public class ModifierDataProcessing
         }
         catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
         {
-            Logging.Debug("A Modifier .json has failed to construct it's args class", Survivor.LOGGER);
+            SurvivorLogging.Debug("A Modifier .json has failed to construct it's args class");
             return null;
         }
 
@@ -134,13 +112,6 @@ public class ModifierDataProcessing
     private static <T extends ModifierStorageArgs<T>> ModifierStorageRecord<T> constructTypedModifierStorageArgs(IntegerStatementOptional cost, IntegerStatementOptional weight, ModifierStorageArgs<?> modifierStorageArgs, ModifierTriggers trigger, IntegerStatementOptional priority, NameModifierRecord nameRecord, Target target, Class<T> buildClass)
     {
         return new ModifierStorageRecord<>(cost, weight, (T) modifierStorageArgs, trigger, priority, nameRecord, target);
-    }
-
-    public static Map<ResourceLocation, Resource> GetAllModifierData()
-    {
-        ResourceManager resourceManager = Constants.server.getResourceManager();
-
-        return resourceManager.listResources(dataPath, path -> path.getPath().endsWith(".json"));
     }
 
     public static ModifierArgTypes stringToModifierType(String string)

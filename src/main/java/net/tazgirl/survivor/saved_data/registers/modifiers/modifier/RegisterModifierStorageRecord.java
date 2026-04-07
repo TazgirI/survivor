@@ -1,4 +1,4 @@
-package net.tazgirl.survivor.saved_data.registers.modifier;
+package net.tazgirl.survivor.saved_data.registers.modifiers.modifier;
 
 import net.tazgirl.survivor.mobs.modifiers.storage.ModifierStorageRecord;
 
@@ -27,6 +27,8 @@ public class RegisterModifierStorageRecord
     {
         register.put(address, record);
     }
+
+    public static void putAll(Map<String, ModifierStorageRecord<?>> map) {register.putAll(map);}
 
     public static boolean hasAddress(String address)
     {

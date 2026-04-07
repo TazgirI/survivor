@@ -1,4 +1,4 @@
-package net.tazgirl.survivor.saved_data.registers.modifier_group;
+package net.tazgirl.survivor.saved_data.registers.modifiers.modifier_group;
 
 import net.tazgirl.tutilz.registers.RegistryEvent;
 

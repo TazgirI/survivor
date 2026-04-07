@@ -7,12 +7,14 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.tazgirl.magicjson.data.Constants;
 import net.tazgirl.magicjson.helpers.InputStreamToJson;
 import net.tazgirl.survivor.Survivor;
+import net.tazgirl.survivor.SurvivorLogging;
 import net.tazgirl.survivor.mobs.wave_mobs.WaveMobStorageSet;
 import net.tazgirl.survivor.saved_data.registers.mobs.mob_sets.RegisterMobSets;
 import net.tazgirl.tutilz.admin.Logging;
 import net.tazgirl.tutilz.registers.MakeRegistryAddress;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
@@ -47,7 +49,7 @@ public class RegisterDataProcessing
 
             if(value == null)
             {
-                Logging.Warn("The registry JSON for \"" + entry.getKey().toString() + "\" failed to process correctly into the designated type", Survivor.LOGGER);
+                SurvivorLogging.Debug("The registry JSON for \"" + entry.getKey().toString() + "\" failed to process correctly into the designated type", List.of(jsonObject));
                 continue;
             }
 

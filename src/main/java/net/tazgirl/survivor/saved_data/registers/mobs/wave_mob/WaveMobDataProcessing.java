@@ -4,31 +4,22 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.tazgirl.magicjson.optionals.OptionalFromElement;
 import net.tazgirl.magicjson.optionals.numbers.IntegerStatementOptional;
 import net.tazgirl.survivor.Globals;
-import net.tazgirl.survivor.Survivor;
+import net.tazgirl.survivor.SurvivorLogging;
 import net.tazgirl.survivor.saved_data.registers.RegisterDataProcessing;
 import net.tazgirl.survivor.saved_data.registers.mobs.ai.RegisterAi;
-import net.tazgirl.survivor.saved_data.registers.modifier_group.RegisterModifierGroup;
-import net.tazgirl.tutilz.admin.Logging;
-import net.tazgirl.magicjson.data.Constants;
-import net.tazgirl.magicjson.helpers.InputStreamToJson;
+import net.tazgirl.survivor.saved_data.registers.modifiers.modifier_group.RegisterModifierGroup;
 import net.tazgirl.survivor.mobs.wave_mobs.WaveMob;
-import net.tazgirl.survivor.saved_data.registers.modifier.RegisterModifierStorageRecord;
+import net.tazgirl.survivor.saved_data.registers.modifiers.modifier.RegisterModifierStorageRecord;
 import net.tazgirl.survivor.mobs.modifiers.storage.ModifierStorageSet;
-import net.tazgirl.tutilz.registers.MakeRegistryAddress;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 public class WaveMobDataProcessing
 {
@@ -38,31 +29,12 @@ public class WaveMobDataProcessing
 
     public static void ProcessWaveMobData()
     {
-        for(Map.Entry<ResourceLocation, Resource> entry : RegisterDataProcessing.getJsons(dataPath).entrySet())
-        {
-            WaveMob<?> entryMob = entryToWaveMob(entry);
-            if(entryMob != null)
-            {
-                RegisterWaveMob.put(MakeRegistryAddress.withPath(entry.getKey(), dataPath),entryMob);
-            }
-        }
+        RegisterWaveMob.putAll(RegisterDataProcessing.loopRegisterJson(dataPath, WaveMobDataProcessing::jsonObjectToWaveMob));
     }
 
     // Should be broken into multiple functions that get handed the WaveMob and JsonObject but... cba
-    static WaveMob<?> entryToWaveMob(Map.Entry<ResourceLocation, Resource> entry)
+    static WaveMob<?> jsonObjectToWaveMob(JsonObject jsonObject)
     {
-        JsonObject jsonObject;
-
-        try (InputStream inputStream = entry.getValue().open())
-        {
-            jsonObject = Objects.requireNonNull(InputStreamToJson.getJson(inputStream));
-        }
-        catch (Exception e)
-        {
-            Logging.Warn(entry.getKey().toString() + " could not be opened, skipping file", Survivor.LOGGER);
-            return null;
-        }
-
         // Optionals
         JsonElement modifiersElement = jsonObject.get("modifiers");
         JsonElement guaranteedModifiersElement = jsonObject.get("guaranteed_modifiers");
@@ -79,7 +51,7 @@ public class WaveMobDataProcessing
 
         if(cost == null || weight == null)
         {
-            logFail(entry);
+            SurvivorLogging.Debug("JsonObject failed to process into a WaveMob, either the cost or weight is missing", List.of(jsonObject));
             return null;
         }
 
@@ -90,7 +62,7 @@ public class WaveMobDataProcessing
         }
         else
         {
-            logFail(entry);
+            SurvivorLogging.Debug("JsonObject failed to process into a WaveMob, entity_type element is missing or is not a primitive/string", List.of(jsonObject));
             return null;
         }
 
@@ -171,10 +143,5 @@ public class WaveMobDataProcessing
         waveMob.addGuaranteedModifiers(guaranteedStorageSet);
 
         return waveMob;
-    }
-
-    private static void logFail(Map.Entry<ResourceLocation, Resource> entry)
-    {
-        Logging.Warn("JsonObject \"" + entry.getKey() + "\" failed to process. Please verify all expected values are present and in an acceptable form even if empty", Survivor.LOGGER);
     }
 }
