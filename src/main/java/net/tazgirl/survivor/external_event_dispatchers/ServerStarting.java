@@ -8,14 +8,15 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.tazgirl.survivor.Globals;
 import net.tazgirl.survivor.Survivor;
 import net.tazgirl.survivor.init.InitSavedData;
-import net.tazgirl.survivor.saved_data.registers.mob_sets.MobSetsDataProcessing;
-import net.tazgirl.survivor.saved_data.registers.mob_sets.MobSetsFetchEvent;
+import net.tazgirl.survivor.saved_data.interactive_positions.RegisterInteractionPositions;
+import net.tazgirl.survivor.saved_data.registers.mobs.mob_sets.MobSetsDataProcessing;
+import net.tazgirl.survivor.saved_data.registers.mobs.mob_sets.MobSetsFetchEvent;
 import net.tazgirl.survivor.saved_data.registers.modifier.ModifierDataProcessing;
 import net.tazgirl.survivor.saved_data.registers.modifier.ModifierFetchEvent;
 import net.tazgirl.survivor.saved_data.registers.modifier_group.ModifierGroupDataProcessing;
 import net.tazgirl.survivor.saved_data.registers.modifier_group.ModifierGroupFetchEvent;
-import net.tazgirl.survivor.saved_data.registers.wave_mob.WaveMobDataProcessing;
-import net.tazgirl.survivor.saved_data.registers.wave_mob.WaveMobFetchEvent;
+import net.tazgirl.survivor.saved_data.registers.mobs.wave_mob.WaveMobDataProcessing;
+import net.tazgirl.survivor.saved_data.registers.mobs.wave_mob.WaveMobFetchEvent;
 
 @EventBusSubscriber(modid = Survivor.MODID)
 public class ServerStarting
@@ -41,6 +42,7 @@ public class ServerStarting
         MobSetsDataProcessing.LoopJsons();
         NeoForge.EVENT_BUS.post(new MobSetsFetchEvent());
 
+        NeoForge.EVENT_BUS.post(new RegisterInteractionPositions.FetchEvent());
     }
 
 }

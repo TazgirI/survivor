@@ -2,9 +2,9 @@ package net.tazgirl.survivor.events.wave_mob_collect_triggers;
 
 import net.neoforged.bus.api.Event;
 import net.neoforged.neoforge.common.NeoForge;
-import net.tazgirl.survivor.main_game.FullContextData;
-import net.tazgirl.survivor.main_game.mobs.wave_mobs.IWaveMob;
-import net.tazgirl.survivor.main_game.mobs.wave_mobs.WaveMob;
+import net.tazgirl.survivor.misc_game_stuff.FullContextData;
+import net.tazgirl.survivor.mobs.wave_mobs.IWaveMob;
+import net.tazgirl.survivor.mobs.wave_mobs.WaveMob;
 
 import java.util.HashMap;
 import java.util.Map;

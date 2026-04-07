@@ -17,5 +17,6 @@ public class ItemModels extends ItemModelProvider
     protected void registerModels()
     {
         basicItem(Items.UMBRELLA_SHIELD.get());
+        basicItem(Items.INTERACTION_POINT_TOOL.get());
     }
 }

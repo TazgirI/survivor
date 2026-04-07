@@ -6,9 +6,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.tazgirl.magicjson.SendMessage;
-import net.tazgirl.survivor.saved_data.registers.mob_sets.RegisterMobSets;
+import net.tazgirl.survivor.saved_data.registers.mobs.mob_sets.RegisterMobSets;
 import net.tazgirl.survivor.saved_data.registers.modifier.RegisterModifierStorageRecord;
-import net.tazgirl.survivor.saved_data.registers.wave_mob.RegisterWaveMob;
+import net.tazgirl.survivor.saved_data.registers.mobs.wave_mob.RegisterWaveMob;
 
 @EventBusSubscriber
 public class RegisterTestCommands

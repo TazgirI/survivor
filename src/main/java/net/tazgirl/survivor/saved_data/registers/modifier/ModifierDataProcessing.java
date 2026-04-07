@@ -8,14 +8,15 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.tazgirl.magicjson.optionals.OptionalFromElement;
 import net.tazgirl.magicjson.optionals.numbers.IntegerStatementOptional;
 import net.tazgirl.survivor.Survivor;
+import net.tazgirl.survivor.mobs.modifiers.modifier_enums.Target;
 import net.tazgirl.tutilz.admin.Logging;
 import net.tazgirl.magicjson.data.Constants;
 import net.tazgirl.magicjson.helpers.InputStreamToJson;
-import net.tazgirl.survivor.main_game.mobs.modifiers.modifier_enums.ModifierTriggers;
-import net.tazgirl.survivor.main_game.mobs.modifiers.NameModifierRecord;
-import net.tazgirl.survivor.main_game.mobs.modifiers.storage.ModifierStorageRecord;
-import net.tazgirl.survivor.main_game.mobs.modifiers.modifier_enums.ModifierArgTypes;
-import net.tazgirl.survivor.main_game.mobs.modifiers.modifier_objects.base.ModifierStorageArgs;
+import net.tazgirl.survivor.mobs.modifiers.modifier_enums.ModifierTriggers;
+import net.tazgirl.survivor.mobs.modifiers.NameModifierRecord;
+import net.tazgirl.survivor.mobs.modifiers.storage.ModifierStorageRecord;
+import net.tazgirl.survivor.mobs.modifiers.modifier_enums.ModifierArgTypes;
+import net.tazgirl.survivor.mobs.modifiers.modifier_objects.base.ModifierStorageArgs;
 import net.tazgirl.tutilz.registers.MakeRegistryAddress;
 
 import java.io.IOException;
@@ -75,6 +76,9 @@ public class ModifierDataProcessing
         String nameModifier;
         int nameModifierPriority;
 
+        JsonElement targetElement;
+        Target target;
+
         try
         {
             modifier = Objects.requireNonNull(stringToModifierType(jsonObject.get("modifier").getAsString()));
@@ -83,6 +87,7 @@ public class ModifierDataProcessing
             argsContainer = Objects.requireNonNull(jsonObject.getAsJsonObject("args"));
             trigger = Objects.requireNonNull(stringToModifierTrigger(jsonObject.get("trigger").getAsString()));
             priority = OptionalFromElement.INT(jsonObject.get("priority"));
+            target = stringToTarget(jsonObject.get("target").getAsString());
         }
         catch (Exception e)
         {
@@ -100,7 +105,7 @@ public class ModifierDataProcessing
         catch (Exception e)
         {
             // entry.key() not accessible within this method, nonspecific error message better than passing over a String every time that will only be used here
-            Logging.Log("Could not process or find NameModifier in \"" + jsonObject.toString() + "\" this may be intentional", Survivor.LOGGER);
+            Logging.Log("Could not process or find NameModifier in \"" + jsonObject + "\" this may be intentional", Survivor.LOGGER);
         }
 
 
@@ -123,12 +128,12 @@ public class ModifierDataProcessing
         }
 
         // Should be completely fine just don't somehow write a ModifierStorageArgs that ignores the superclasses T
-        return constructTypedModifierStorageArgs(cost, weight, modifierStorageArgs, trigger, priority, nameRecord, modifierStorageArgs.getClass());
+        return constructTypedModifierStorageArgs(cost, weight, modifierStorageArgs, trigger, priority, nameRecord, target, modifierStorageArgs.getClass());
     }
 
-    private static <T extends ModifierStorageArgs<T>> ModifierStorageRecord<T> constructTypedModifierStorageArgs(IntegerStatementOptional cost, IntegerStatementOptional weight, ModifierStorageArgs<?> modifierStorageArgs, ModifierTriggers trigger, IntegerStatementOptional priority, NameModifierRecord nameRecord, Class<T> buildClass)
+    private static <T extends ModifierStorageArgs<T>> ModifierStorageRecord<T> constructTypedModifierStorageArgs(IntegerStatementOptional cost, IntegerStatementOptional weight, ModifierStorageArgs<?> modifierStorageArgs, ModifierTriggers trigger, IntegerStatementOptional priority, NameModifierRecord nameRecord, Target target, Class<T> buildClass)
     {
-        return new ModifierStorageRecord<>(cost, weight, (T) modifierStorageArgs, trigger, priority, nameRecord);
+        return new ModifierStorageRecord<>(cost, weight, (T) modifierStorageArgs, trigger, priority, nameRecord, target);
     }
 
     public static Map<ResourceLocation, Resource> GetAllModifierData()
@@ -162,5 +167,17 @@ public class ModifierDataProcessing
         }
 
         return null;
+    }
+
+    public static Target stringToTarget(String string)
+    {
+        for(Target target : Target.values())
+        {
+            if(target.toString().equals(string.toUpperCase()))
+            {
+                return target;
+            }
+        }
+        return Target.SELF;
     }
 }

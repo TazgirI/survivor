@@ -5,11 +5,11 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.tazgirl.survivor.Survivor;
-import net.tazgirl.survivor.main_game.players.RegisterPlayer;
-import net.tazgirl.survivor.saved_data.registers.mob_sets.RegisterMobSets;
+import net.tazgirl.survivor.players.RegisterPlayer;
+import net.tazgirl.survivor.saved_data.registers.mobs.mob_sets.RegisterMobSets;
 import net.tazgirl.survivor.saved_data.registers.modifier.RegisterModifierStorageRecord;
 import net.tazgirl.survivor.saved_data.registers.modifier_group.RegisterModifierGroup;
-import net.tazgirl.survivor.saved_data.registers.wave_mob.RegisterWaveMob;
+import net.tazgirl.survivor.saved_data.registers.mobs.wave_mob.RegisterWaveMob;
 
 @EventBusSubscriber(modid = Survivor.MODID)
 public class ServerStopped

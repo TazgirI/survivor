@@ -1,11 +1,15 @@
 package net.tazgirl.survivor.saved_data;
 
-import com.google.common.base.Enums;
-
 public enum SavedDataNames
 {
-    MOB_SPAWN_POINTS;
+    MOB_SPAWN_POINTS("MobSpawnEntries"),
+    INTERACTION_POINTS_ADDRESS("InteractivePositions");
 
 
+    public final String string;
 
+    SavedDataNames(String string)
+    {
+        this.string = string;
+    }
 }

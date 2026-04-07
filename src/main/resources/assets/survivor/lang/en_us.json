@@ -6,6 +6,6 @@
   "survivor.messages.mob_spawn_points.show_success": "Spawned %d armour stands",
 
 
-  "item.survivor.umbrella_shield": "Umbrella Shield"
-
+  "item.survivor.umbrella_shield": "Umbrella Shield",
+  "item.survivor.interaction_point_tool": "Interaction Point Tool"
 }

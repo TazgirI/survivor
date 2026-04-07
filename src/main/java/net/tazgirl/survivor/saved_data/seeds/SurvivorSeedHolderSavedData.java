@@ -6,12 +6,10 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.tazgirl.survivor.Globals;
-import net.tazgirl.survivor.main_game.CoreGameData;
-import net.tazgirl.survivor.main_game.data.seeds.SurvivorSeedHelper;
-import net.tazgirl.survivor.main_game.data.seeds.structure.SeedHolder;
-import net.tazgirl.survivor.main_game.data.seeds.structure.SurvivorSeed;
+import net.tazgirl.survivor.misc_game_stuff.CoreGameData;
+import net.tazgirl.survivor.data.seeds.structure.SeedHolder;
+import net.tazgirl.survivor.data.seeds.structure.SurvivorSeed;
 import net.tazgirl.survivor.saved_data.CoreTagNames;
-import net.tazgirl.survivor.saved_data.mob_spawn_points.MobSpawnsMapSavedData;
 
 import java.util.HashMap;
 import java.util.Map;

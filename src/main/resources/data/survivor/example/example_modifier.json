@@ -18,5 +18,7 @@
   {
     "name_modifier": "strong",
     "priority": "opinion"
-  }
+  },
+
+  "target": "ranDOm_pLaYer"
 }

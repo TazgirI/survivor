@@ -8,6 +8,7 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.tazgirl.survivor.Survivor;
 import net.tazgirl.survivor.events.CollectCommandBranchesEvent;
 import net.tazgirl.tutilz.Tutilz;
+import net.tazgirl.tutilz.commands.ArgBranch;
 import net.tazgirl.tutilz.commands.ArgPair;
 import net.tazgirl.tutilz.commands.QuickRegisterCommand;
 
@@ -18,12 +19,12 @@ public class MobSpawnPointCommands
 {
     final static String branchName = "mobSpawnPoints";
 
-    static final ArgPair[] argPairs = List.of(
-            new ArgPair("saveMobSpawnPoints", ManageMobSpawnPoints::Save),
-            new ArgPair("clearMobSpawnPoints", ManageMobSpawnPoints::Clear),
-            new ArgPair("visualiseMobSpawnPoints", ManageMobSpawnPoints::Show),
-            new ArgPair("visualiseAndClearMobSpawnPoints", ManageMobSpawnPoints::ShowAndClear)
-    ).toArray(new ArgPair[0]);
+    static final ArgBranch[] argPairs = List.of(
+            ArgBranch.New("saveMobSpawnPoints", ManageMobSpawnPoints::Save),
+            ArgBranch.New("clearMobSpawnPoints", ManageMobSpawnPoints::Clear),
+            ArgBranch.New("visualiseMobSpawnPoints", ManageMobSpawnPoints::Show),
+            ArgBranch.New("visualiseAndClearMobSpawnPoints", ManageMobSpawnPoints::ShowAndClear)
+    ).toArray(new ArgBranch[0]);
 
     @SubscribeEvent
     public static void OnRegisterCommands(CollectCommandBranchesEvent event)

@@ -5,6 +5,7 @@ import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.NeoForge;
+import net.tazgirl.tutilz.commands.ArgBranch;
 import net.tazgirl.tutilz.commands.ArgPair;
 
 import java.util.HashMap;
@@ -13,19 +14,19 @@ import java.util.Map;
 
 public class CollectCommandBranchesEvent extends Event
 {
-    private Map<String, ArgPair[]> branchesMap = new HashMap<>();
+    private Map<String, ArgBranch[]> branchesMap = new HashMap<>();
 
     public CollectCommandBranchesEvent()
     {
 
     }
 
-    public void AddBranch(String branchName, ArgPair[] branchFuncs)
+    public void AddBranch(String branchName, ArgBranch[] branchFuncs)
     {
         branchesMap.put(branchName, branchFuncs);
     }
 
-    public Map<String, ArgPair[]> GetBranchesList()
+    public Map<String, ArgBranch[]> GetBranchesList()
     {
         return branchesMap.isEmpty() ? null: branchesMap;
     }
@@ -37,6 +38,5 @@ public class CollectCommandBranchesEvent extends Event
         NeoForge.EVENT_BUS.post(newEvent);
 
         return newEvent;
-
     }
 }

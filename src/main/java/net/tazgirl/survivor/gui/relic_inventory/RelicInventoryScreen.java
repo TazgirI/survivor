@@ -178,6 +178,7 @@ public class RelicInventoryScreen extends AbstractScreen
     public static List<ItemStack> getItems()
     {
         // TODO: IMPLEMENT COMPONENT!!!
+        // TODO: Figure out what that TODO means
         List<ItemStack> returnList = new ArrayList<>();
 
         for(int i = 0; i < 100; i++)

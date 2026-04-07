@@ -44,9 +44,6 @@ public class RelicItemRowComponent extends ScrollContentComponent
 
             int moduloMouseX = x % (getContentSpacing() + screen.itemSize);
 
-            SendMessage.All("Mod Mouse X: " + moduloMouseX + "screen.gap: " + screen.gap + " screen.itemSize: " + screen.itemSize + "screen.margin: " + screen.margin);
-            System.out.println("Mod Mouse X: " + moduloMouseX + "screen.gap: " + screen.gap + " screen.itemSize: " + screen.itemSize + "screen.margin: " + screen.margin);
-
             if(moduloMouseX - screen.gap - screen.margin <= screen.itemSize && moduloMouseX - screen.gap >= 0)
             {
                 int index = x / (getContentSpacing() + screen.itemSize );

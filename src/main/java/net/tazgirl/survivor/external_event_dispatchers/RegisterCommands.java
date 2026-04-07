@@ -5,6 +5,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.tazgirl.survivor.Survivor;
 import net.tazgirl.survivor.events.CollectCommandBranchesEvent;
+import net.tazgirl.tutilz.commands.ArgBranch;
 import net.tazgirl.tutilz.commands.ArgPair;
 import net.tazgirl.tutilz.commands.QuickRegisterCommand;
 
@@ -17,9 +18,10 @@ public class RegisterCommands
     public static void OnRegisterCommands(RegisterCommandsEvent event)
     {
         QuickRegisterCommand.BuildThreeStageArgTree(event.getDispatcher(), "survivor", 4, FireBranchesEvent());
+
     }
 
-    public static Map<String, ArgPair[]> FireBranchesEvent()
+    public static Map<String, ArgBranch[]> FireBranchesEvent()
     {
         CollectCommandBranchesEvent branchesEvent = CollectCommandBranchesEvent.FireEvent();
 

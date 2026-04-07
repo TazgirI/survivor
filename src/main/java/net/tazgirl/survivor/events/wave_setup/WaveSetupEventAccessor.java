@@ -1,7 +1,6 @@
 package net.tazgirl.survivor.events.wave_setup;
 
-import net.neoforged.bus.api.Event;
-import net.tazgirl.survivor.main_game.wave.Wave;
+import net.tazgirl.survivor.wave.Wave;
 import net.tazgirl.tutilz.events.priority_events.EventAccessor;
 
 
